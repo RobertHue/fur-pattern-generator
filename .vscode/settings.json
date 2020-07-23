@@ -1,0 +1,6 @@
+{
+    "python.pythonPath": "C:\\Program Files\\Blender Foundation\\Blender 2.83\\2.83\\python\\bin\\python.exe",
+    "files.trimFinalNewlines": true,
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true
+}
