@@ -99,7 +99,6 @@ class Image:
 		"""
 		if self.isValidCoord(x, y):
 			index = (y * self.width() + x) * 4
-			r,g,b,a = self.img.pixels[index:index+4]
 			cell = self.img.pixels[index:index+4]
 			return cell
 		return [0,0,0,0] 
@@ -119,7 +118,6 @@ class Image:
 		If no valid coords 'x' and 'y' are supplied, then only 'False' is returned.
 		"""
 		if self.isValidCoord(x, y):
-			cell = 0.0
 			index = (y * self.width() + x) * 4
 			self.img.pixels[index:index+4] = RGBA
 			return True
@@ -213,18 +211,13 @@ def CA_young(image):
 	print("1st pass start")
 	for u in range(height):
 		for v in range(width):
-			# only do if cell is a D-cell:
-			hsv_color = image.getPixel_HSV(u, v)
 #			print("### visit pixel: (", u, ", ", v, ")")
-
 			cells.resetVisited()
-			AD = countDCells(image, cells, u, v, 3);
+			AD = countDCells(image, cells, u, v, 3)
 #			cells.printVisits()
-			
 			cells.resetVisited()
-			ID = countDCells(image, cells, u, v, 6) - AD;
+			ID = countDCells(image, cells, u, v, 6) - AD
 #			cells.printVisits()
-			
 			w=0.69
 			Disc = AD - w * ID
 			
@@ -263,3 +256,4 @@ if __name__ == "__main__":
 	
 	
 	print("FINISHED")
+	
