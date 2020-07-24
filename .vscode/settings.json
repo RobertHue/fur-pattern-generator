@@ -1,14 +1,19 @@
 {
-    "python.pythonPath": "C:\\Program Files\\Blender Foundation\\Blender 2.83\\2.83\\python\\bin\\python.exe",
-    "files.trimFinalNewlines": true,
     "files.trimTrailingWhitespace": true,
+    "files.trimFinalNewlines": true,
     "files.insertFinalNewline": true,
     "editor.rulers": [80,120],
     "workbench.colorCustomizations": {
         "editorRuler.foreground": "#ff4081"
     },
-    // The number of spaces a tab is equal to:
     "editor.tabSize": 4,
-    // Do not insert spaces when pressing Tab:
-    "editor.insertSpaces": false
+    "editor.insertSpaces": false,
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/__pycache__": true
+    }
 }
