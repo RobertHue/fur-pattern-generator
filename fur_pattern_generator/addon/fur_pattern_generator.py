@@ -198,6 +198,11 @@ def countDCells(image, cells, x, y, mh_radius):
 	return cellCount
 
 
+def generate_random(image):
+	# create random image
+	for u in range(image.height()):
+		for v in range(image.width()):
+			image.setPixel_HSV(u, v, [0,0,random.randint(0,1)])
 
 def CA_young(image):
 	width  = image.width()
@@ -238,21 +243,3 @@ def CA_young(image):
 				image.setPixel_HSV(u, v, [0.05,0.8,1.0] )
 
 #	cells.print()
-
-
-
-if __name__ == "__main__":
-
-	image = Image("Image.png")
-
-	# create random image
-	for u in range(image.height()):
-		for v in range(image.width()):
-			image.setPixel_HSV(u, v, [0,0,random.randint(0,1)])
-
-	CA_young(image)
-
-
-
-
-	print("FINISHED")
