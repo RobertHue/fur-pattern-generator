@@ -1,26 +1,81 @@
 import bpy
+from mathutils import noise, Vector
+
 from . import fur_pattern_generator as fpg
+from . import properties as props
 
 print('__file__={0:<35} | __name__={1:<20} | __package__={2:<20}'.format(
 	__file__,__name__,str(__package__)))
 
 
-class FUR_PATTERN_GENERATOR_OT_ca_young(bpy.types.Operator):
-	bl_idname = "fur_pattern_generator.ca_young"
-	bl_label = "Fur-Generator: CA Young"
+
+#create a property group, this is REALLY needed so that operators
+#AND the UI can access, display and expose it to the user to change
+# #in here we will have all properties(variables) that is neccessary
+# class CustomPropertyGroup(bpy.types.PropertyGroup):
+# 	#NOTE: read documentation about 'props' to see them and their keyword arguments
+# 	#       https://docs.blender.org/api/current/bpy.props.html
+# 	float_slider: bpy.props.FloatProperty(name='float value', soft_min=0, soft_max=10)
+
+
+
+class FPG_OT_ca_young(bpy.types.Operator):
+	"""generates a fur pattern through CA Young"""
+	bl_idname = "fpg.ca_young"
+	bl_label = "CA Young"
+	bl_options = {'REGISTER', 'UNDO'}
 
 	def execute(self, context):
-		image = fpg.Image("Image.png")
-		fpg.CA_young(image)
+		image = fpg.Image(context.edit_image.name)
+		imageData = bpy.data.materials[0]
+		fpg.CA_young(
+			image,
+			imageData.my_settings.w,
+			imageData.my_settings.color_D,
+			imageData.my_settings.color_U
+		)
+		return {'FINISHED'}
+
+
+class FPG_OT_generate_random(bpy.types.Operator):
+	"""generates random noise"""
+	bl_idname = "fpg.generate_random"
+	bl_label = "Random Noise"
+
+	def execute(self, context):
+		image = fpg.Image(context.edit_image.name)
+		fpg.generate_random(image)
 		return {'FINISHED'}
 
 
 
-class FUR_PATTERN_GENERATOR_OT_generate_random(bpy.types.Operator):
-	bl_idname = "fur_pattern_generator.generate_random"
-	bl_label = "Fur-Generator: Random"
 
-	def execute(self, context):
-		image = fpg.Image("Image.png")
-		fpg.generate_random(context.edit_image)
-		return {'FINISHED'}
+# class FPG_OT_generate_random_mathutils(bpy.types.Operator):
+# 	"""TBD"""
+# 	bl_idname = "fpg.generate_random_mathutils"
+# 	bl_label = "TBD"
+
+# 	def execute(self, context):
+# 		image = fpg.Image(context.edit_image.name)
+# 		# create random image
+# 		for u in range(image.height()):
+# 			for v in range(image.width()):
+# 				print("vec: ", Vector((u,v,0)))
+# 				image.setPixel_HSV(u, v, Vector((u,v,0)))
+# 		return {'FINISHED'}
+
+
+classes = (
+	FPG_OT_ca_young,
+	FPG_OT_generate_random
+)
+
+def register():
+	from bpy.utils import register_class
+	for cls in classes:
+		register_class(cls)
+
+def unregister():
+	from bpy.utils import unregister_class
+	for cls in classes:
+		unregister_class(cls)

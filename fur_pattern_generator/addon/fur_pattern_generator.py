@@ -11,7 +11,7 @@ class Cells:
 	This class defines the cells of the CA
 	"""
 
-	def __init__(self, image):
+	def __init__(self, image, color_D):
 		self.width  = image.width()
 		self.height = image.height()
 
@@ -19,7 +19,11 @@ class Cells:
 			for i in range(self.width)]
 			for j in range(self.height)]
 
-		self.cells = [["D" if image.getPixel_HSV(i,j)[2] < 0.2 else 'U'
+		self.cells = [["D"
+			if image.getPixel_HSV(i,j)[0] == color_D[0] and
+			   image.getPixel_HSV(i,j)[1] == color_D[1] and
+			   image.getPixel_HSV(i,j)[2] == color_D[2]
+			else 'U'
 			for i in range(self.width)]
 			for j in range(self.height)]
 
@@ -204,14 +208,14 @@ def generate_random(image):
 		for v in range(image.width()):
 			image.setPixel_HSV(u, v, [0,0,random.randint(0,1)])
 
-def CA_young(image):
+def CA_young(image, incubatorWeight, color_D, color_U):
 	width  = image.width()
 	height = image.height()
 
 	# we need to know the image dimensions
 	print ("Image size: ", width, " x ", height)
 
-	cells = Cells(image)
+	cells = Cells(image, color_D)
 	# 1st pass : calculate cells Disc and apply cells-set
 	print("1st pass start")
 	for u in range(height):
@@ -223,14 +227,13 @@ def CA_young(image):
 			cells.resetVisited()
 			ID = countDCells(image, cells, u, v, 6) - AD
 #			cells.printVisits()
-			w=0.69
-			Disc = AD - w * ID
+			Disc = AD - incubatorWeight * ID
 
 			if (Disc > 0):
-#				print("### formula: ", Disc, " = ", AD, " - ", w, " * ", ID)
+#				print("### formula: ", Disc, " = ", AD, " - ", incubatorWeight, " * ", ID)
 				cells.set(u, v, "D")
 			elif (Disc < 0):
-#				print("### formula: ", Disc, " = ", AD, " - ", w, " * ", ID)
+#				print("### formula: ", Disc, " = ", AD, " - ", incubatorWeight, " * ", ID)
 				cells.set(u, v, "U")
 
 	print("2nd pass start")
@@ -238,8 +241,8 @@ def CA_young(image):
 	for u in range(height):
 		for v in range(width):
 			if cells.get(u, v) == "D":
-				image.setPixel_HSV(u, v, [0,0,0])
+				image.setPixel_RGBA(u, v, color_D)
 			elif cells.get(u, v) == "U":
-				image.setPixel_HSV(u, v, [0.05,0.8,1.0] )
+				image.setPixel_RGBA(u, v, color_U)
 
 #	cells.print()
