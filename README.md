@@ -12,16 +12,16 @@ neighborhood:
 # Table of Contents
 1. [Usage](#usage)
 2. [Development](#development)
-	2.1. [Good to know](#good-to-know)
-	2.2. [Coding Conventions](#coding-conventions)
-	2.3. [Visual Studio Code](#visual-studio-code)
+* [Good to know](#good-to-know)
+* [Coding Conventions](#coding-conventions)
+* [Visual Studio Code](#visual-studio-code)
 3. [Installation](#installation)
-	3.1. [Install Visual Studio Code](#install-visual-studio-code)
-	3.2. [Setup](#setup)
-	3.3. [Install pip](#install-pip)
-	3.4. [Install fake-bpy](#install-fake-bpy)
-	3.5. [Install openCV](#install-opencv)
-	3.6. [Install NumPy](#install-numpy)
+* [Install Visual Studio Code](#install-visual-studio-code)
+* [Setup](#setup)
+* [Install pip](#install-pip)
+* [Install fake-bpy](#install-fake-bpy)
+* [Install openCV](#install-opencv)
+* [Install NumPy](#install-numpy)
 
 ## Usage:
 
