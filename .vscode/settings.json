@@ -18,6 +18,6 @@
     },
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
-    "python.pythonPath": "c:\\Program Files\\Blender Foundation\\Blender 2.83\\2.83\\python\\bin\\python.exe",
+    "python.pythonPath": "c:\\Users\\rhuemmer\\Desktop\\blender\\blender-2.83.3-windows64\\2.83\\python\\bin\\python.exe",
     "python.linting.flake8Enabled": false
 }
