@@ -74,7 +74,8 @@ For debugging your addon, you can also use normal or conditional break-points.
 
 ## Installation
 
-### Install Visual Studio Code
+<details>
+<summary>Install Visual Studio Code</summary>
 
 https://code.visualstudio.com/
 
@@ -83,6 +84,8 @@ with the following addons:
 Python extension for Visual Studio Code - by Microsoft
 Blender Development - by Jacques Lucke
 Blender Python Code Templates - by blenderfreetimeprojects
+</details>
+
 
 ### Setup
 
