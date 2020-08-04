@@ -12,22 +12,7 @@ neighborhood:
 # Table of Contents
 1. [Usage](#usage)
 2. [Development](#development)
-<details>
-<summary></summary>
-	* [Good to know](#good-to-know)
-	* [Coding Conventions](#coding-conventions)
-	* [Visual Studio Code](#visual-studio-code)
-</details>
 3. [Installation](#installation)
-<details>
-<summary></summary>
-	* [Install Visual Studio Code](#install-visual-studio-code)
-	* [Setup](#setup)
-	* [Install pip](#install-pip)
-	* [Install fake-bpy](#install-fake-bpy)
-	* [Install openCV](#install-opencv)
-	* [Install NumPy](#install-numpy)
-</details>
 
 ## Usage:
 
@@ -45,13 +30,13 @@ who want to test this addon. So have fun and fiddle with it.
 
 ### Good to know
 
-- https://wiki.blender.org/wiki/Reference/Release_Notes/2.80/Python_API/Addons
-- https://docs.blender.org/api/2.83/bpy.props.html
+* https://wiki.blender.org/wiki/Reference/Release_Notes/2.80/Python_API/Addons
+* https://docs.blender.org/api/2.83/bpy.props.html
 
 ### Coding Conventions
-- https://www.gdquest.com/docs/guidelines/best-practices/blender-python/
-- https://realpython.com/absolute-vs-relative-python-imports/
-- https://b3d.interplanety.org/en/class-naming-conventions-in-blender-2-8-python-api/
+* https://www.gdquest.com/docs/guidelines/best-practices/blender-python/
+* https://realpython.com/absolute-vs-relative-python-imports/
+* https://b3d.interplanety.org/en/class-naming-conventions-in-blender-2-8-python-api/
 
 ### Visual Studio Code
 
@@ -60,9 +45,9 @@ development features such as autocomplete, syntax highlighting, integration
 with version control systems and other tools that make development faster
 and easier:
 
-- https://b3d.interplanety.org/en/using-microsoft-visual-studio-code-as-external-ide-for-writing-blender-scripts-add-ons/
-- https://youtu.be/q06-hER7Y1Q
-- https://medium.com/@m3lles/how-to-hide-unwanted-folders-and-files-in-visual-studio-code-2bb0f39c4251
+* https://b3d.interplanety.org/en/using-microsoft-visual-studio-code-as-external-ide-for-writing-blender-scripts-add-ons/
+* https://youtu.be/q06-hER7Y1Q
+* https://medium.com/@m3lles/how-to-hide-unwanted-folders-and-files-in-visual-studio-code-2bb0f39c4251
 
 #### Hint:
 
@@ -76,9 +61,6 @@ For debugging your addon, you can also use normal or conditional break-points.
 
 ### Install Visual Studio Code
 
-<details>
-<summary>Click to expand!</summary>
-
 https://code.visualstudio.com/
 
 with the following addons:
@@ -86,8 +68,6 @@ with the following addons:
 * Python extension for Visual Studio Code - by Microsoft
 * Blender Development - by Jacques Lucke
 * Blender Python Code Templates - by blenderfreetimeprojects
-</details>
-
 
 ### Setup
 
@@ -128,10 +108,6 @@ For working with image-textures, you may also want to get openCV
 
 ### Install NumPy
 
-<details>
-<summary>Click to expand!</summary>
 Images in openCV are represented with NumPy-arrays, so install numpy as well:
 
 `./python.exe -m pip install numpy`
-
-</details>
