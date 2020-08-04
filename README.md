@@ -2,15 +2,10 @@
 With this blender add-on you can generate textures in the shape of the stripes
 and dots on animals, such as leopards and tigers.
 
-<<<<<<< HEAD
 The algorithm used for it is the one defined by David Young. It is based on
-cellular automata and is using a simulation of activator and inhibator genes
-that are sent out from melanocytes to cells in their neighborhood:
-=======
-The algorithm used for it is the one defined by David Young, that is based on
-cellular automata and is using activator and inhibator genes that are sent out
-from melanocytes to cells in their neighborhood:
->>>>>>> 07aeda6a9d0f4a6329a4c2a2354e0bdaafaa1c04
+cellular automata and is simulating the pigment-cells (melanocytes) inside of
+mammals, that are sending out activator and inhibator genes into their
+neighborhood:
 - https://users.math.yale.edu/public_html/People/frame/Fractals/Panorama/Biology/Leopard/Leopard.html
 - http://ccl.northwestern.edu/netlogo/models/Fur
 
@@ -28,11 +23,6 @@ from melanocytes to cells in their neighborhood:
 	##. [Install fake-bpy](#install-fake-bpy)
 	##. [Install openCV](#install-opencv)
 	##. [Install NumPy](#install-numpy)
-=======
-1. [Usage](#usage)
-2. [Development](#development)
-3. [Installation](#installation)
->>>>>>> 07aeda6a9d0f4a6329a4c2a2354e0bdaafaa1c04
 
 ## Usage:
 
