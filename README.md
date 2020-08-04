@@ -77,15 +77,15 @@ For debugging your addon, you can also use normal or conditional break-points.
 ### Install Visual Studio Code
 
 <details>
-<summary></summary>
+<summary>Click to expand!</summary>
 
 https://code.visualstudio.com/
 
 with the following addons:
 
-Python extension for Visual Studio Code - by Microsoft
-Blender Development - by Jacques Lucke
-Blender Python Code Templates - by blenderfreetimeprojects
+* Python extension for Visual Studio Code - by Microsoft
+* Blender Development - by Jacques Lucke
+* Blender Python Code Templates - by blenderfreetimeprojects
 </details>
 
 
@@ -128,6 +128,10 @@ For working with image-textures, you may also want to get openCV
 
 ### Install NumPy
 
+<details>
+<summary>Click to expand!</summary>
 Images in openCV are represented with NumPy-arrays, so install numpy as well:
 
 `./python.exe -m pip install numpy`
+
+</details>
