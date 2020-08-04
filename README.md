@@ -75,7 +75,7 @@ For debugging your addon, you can also use normal or conditional break-points.
 ## Installation
 
 <details>
-<summary>Install Visual Studio Code</summary>
+<summary>### Install Visual Studio Code</summary>
 
 https://code.visualstudio.com/
 
