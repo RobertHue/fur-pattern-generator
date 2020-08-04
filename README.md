@@ -9,11 +9,13 @@ neighborhood:
 - https://users.math.yale.edu/public_html/People/frame/Fractals/Panorama/Biology/Leopard/Leopard.html
 - http://ccl.northwestern.edu/netlogo/models/Fur
 
+---
 # Table of Contents
 1. [Usage](#usage)
 2. [Development](#development)
 3. [Installation](#installation)
 
+---
 ## Usage:
 
 Go into UV-Editor and create an image by hitting `New Image`.
@@ -23,6 +25,7 @@ After that you can generate a `Random Noise` or let the CA young pattern generat
 
 ![example](example.png)
 
+---
 ## Development
 
 This section serves rather as a knowledge-base for developers,
@@ -57,6 +60,7 @@ For testing changes in your addon really quick, just reload the addon with:
 
 For debugging your addon, you can also use normal or conditional break-points.
 
+---
 ## Installation
 
 ### Install Visual Studio Code
