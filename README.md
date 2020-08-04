@@ -1,12 +1,26 @@
 # fur_pattern_generator
-This is a blender add-on for generating fur textures.
+With this blender add-on you can generate textures in the shape of the stripes
+and dots on animals, such as leopards and tigers.
 
-You can generate textures with it, that use a Cellular Automata to simulate
-the stripes and dots on animals such as leopards and tigers.
-
-The algorithm used for it is the one defined by David Young, that is based on cellular automata:
+The algorithm used for it is the one defined by David Young. It is based on
+cellular automata and is using a simulation of activator and inhibator genes
+that are sent out from melanocytes to cells in their neighborhood:
 - https://users.math.yale.edu/public_html/People/frame/Fractals/Panorama/Biology/Leopard/Leopard.html
 - http://ccl.northwestern.edu/netlogo/models/Fur
+
+# Table of Contents
+#. [Usage](#usage)
+#. [Development](#development)
+	##. [Good to know](#good-to-know)
+	##. [Coding Conventions](#coding-conventions)
+	##. [Visual Studio Code](#visual-studio-code)
+#. [Installation](#installation)
+	##. [Install Visual Studio Code](#install-visual-studio-code)
+	##. [Setup](#setup)
+	##. [Install pip](#install-pip)
+	##. [Install fake-bpy](#install-fake-bpy)
+	##. [Install openCV](#install-opencv)
+	##. [Install NumPy](#install-numpy)
 
 ## Usage:
 
@@ -27,7 +41,7 @@ who want to test this addon. So have fun and fiddle with it.
 - https://wiki.blender.org/wiki/Reference/Release_Notes/2.80/Python_API/Addons
 - https://docs.blender.org/api/2.83/bpy.props.html
 
-### Coding Conventions used:
+### Coding Conventions
 - https://www.gdquest.com/docs/guidelines/best-practices/blender-python/
 - https://realpython.com/absolute-vs-relative-python-imports/
 - https://b3d.interplanety.org/en/class-naming-conventions-in-blender-2-8-python-api/
