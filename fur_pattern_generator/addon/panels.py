@@ -17,9 +17,7 @@ class FPG_PT_ui(bpy.types.Panel):
 	# category is esentially the main UI element, the panels inside it are
 	# collapsible dropdown menus drawn under a category
 	# you can add your own name, or an existing one and it will be drawn accordingly
-	bl_category = 'Image'
-
-	testddd: bpy.props.BoolProperty(name = "bool state", default = False)
+	bl_category = 'Tool'
 
 	def draw(self, context):
 		layout = self.layout
@@ -38,7 +36,6 @@ class FPG_PT_ui(bpy.types.Panel):
 		layout.prop(material.my_settings, "color_U")
 
 		layout.operator("fpg.generate_random")
-		layout.prop(self, "testddd") # this doesn't work for some reason
 
 		# layout.operator("fpg.generate_random_mathutils")
 

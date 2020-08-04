@@ -1,9 +1,12 @@
 import bpy
 import colorsys
+
 import numpy as np
 import random
 from multiprocessing import Pool
 from multiprocessing import cpu_count
+from cv2 import cv2
+
 
 
 class Cells:
@@ -14,6 +17,9 @@ class Cells:
 	def __init__(self, image, color_D):
 		self.width  = image.width()
 		self.height = image.height()
+		self.disc = [[0.0
+			for i in range(self.width)]
+			for j in range(self.height)]
 
 		self.visited = [[0
 			for i in range(self.width)]
@@ -26,6 +32,13 @@ class Cells:
 			else 'U'
 			for i in range(self.width)]
 			for j in range(self.height)]
+
+	def setDisc(self, u, v, disc):
+		self.disc[v][u] = disc
+
+	def getDisc(self, u, v):
+		return self.disc[v][u]
+
 
 	def increaseVisits(self, u, v):
 		self.visited[v][u] += 1
@@ -55,6 +68,7 @@ class Cells:
 
 	def print(self):
 		print()
+		print("print: ")
 		for row in self.cells[::-1]:
 			print('[', end='')
 			for val in row:
@@ -64,10 +78,31 @@ class Cells:
 
 	def printVisits(self):
 		print()
+		print("printVisits: ")
 		for row in self.visited[::-1]:
 			print('[', end='')
 			for val in row:
-				print('{:1}'.format(val), end='')
+				if (val >= 1):
+					print('{:2}'.format(val), end='')
+				elif (val == 0):
+					print('{:2}'.format(' '), end='')
+				else:
+					print('{:2}'.format('E'), end='')
+			print(']')
+		print()
+
+	def printDiscs(self):
+		print()
+		print("printDiscs: ")
+		for row in self.disc[::-1]:
+			print('[', end='')
+			for d in row:
+				if (d > 0):
+					print('{:2}'.format('+'), end='')
+				elif (d < 0):
+					print('{:2}'.format('-'), end='')
+				else:
+					print('{:2}'.format(' '), end='')
 			print(']')
 		print()
 
@@ -78,21 +113,45 @@ class Image:
 	Pass an image file loaded into Blender when creating an Image-object.
 	"""
 	def __init__(self, image_file):
-		self.img = bpy.data.images[image_file]
+		self._img = bpy.data.images[image_file]
 
 	def width(self):
-		return self.img.size[0]
+		return self._img.size[0]
 
 	def height(self):
-		return self.img.size[1]
+		return self._img.size[1]
+
+	def export_CV(self):
+		pixelList = list(self._img.pixels)
+		# print("pixelList : ", pixelList)
+		# print("len(pixelList): ", len(pixelList))
+		rgbPixels = [x for i, x in enumerate(pixelList) if (i+1)%4 != 0]
+		a = np.array(rgbPixels)
+		# print("a : ", a)
+		# print("len(a): ", len(a))
+		b = np.reshape(a, (self.height(), self.width(), 3))
+		# print("b : ", b)
+		# print("len(b): ", len(b))
+		rgba = np.ones((self.height(), self.width(), 3), dtype=np.uint8)
+		rgba[:,:,:] = np.uint8(b) * 255
+		cv_image = np.flip(rgba, axis=[0, 2])
+		# print("cv_image: ", cv_image)
+		# print("len(cv_image): ", len(cv_image))
+		return np.float32(cv_image)
+
+	def import_CV(self, cv_image):
+		rgb = np.flip(cv_image, axis=[0, 2])
+		rgba = np.ones((self.height(), self.width(), 4), dtype=np.float32)
+		rgba[:,:,:-1] = np.float32(rgb) / 255
+		self._img.pixels = rgba.flatten()
 
 	def isValidCoord(self, x, y):
 		"""
 		Returns 'True', if the supplied coordinates
 		are in the Image. Otherwhise returns 'False'.
 		"""
-		if x >= 0 and x < self.img.size[0] and \
-		   y >= 0 and y < self.img.size[1]:
+		if x >= 0 and x < self._img.size[0] and \
+		   y >= 0 and y < self._img.size[1]:
 			return True
 		return False
 
@@ -103,7 +162,7 @@ class Image:
 		"""
 		if self.isValidCoord(x, y):
 			index = (y * self.width() + x) * 4
-			cell = self.img.pixels[index:index+4]
+			cell = self._img.pixels[index:index+4]
 			return cell
 		return [0,0,0,0]
 
@@ -123,7 +182,7 @@ class Image:
 		"""
 		if self.isValidCoord(x, y):
 			index = (y * self.width() + x) * 4
-			self.img.pixels[index:index+4] = RGBA
+			self._img.pixels[index:index+4] = RGBA
 			return True
 		return False
 
@@ -133,116 +192,167 @@ class Image:
 		If no valid coords 'x' and 'y' are supplied, then only 'False' is returned.
 		"""
 		rgb  = colorsys.hsv_to_rgb(HSV[0], HSV[1], HSV[2])
-		rgba = [v for v in rgb]
+		rgba = list(rgb)
 		rgba.append(1)
 		return self.setPixel_RGBA(x, y, rgba)
 
 
 
-def countDCells(image, cells, x, y, mh_radius):
+def drawCircle(image, color, x, y, radius):
+	"""
+	draws a circle into image
+	"""
+	# Reading an image in default mode
+	cv_img = (image.export_CV())
+
+	# draw a circle as mask
+	center_coordinates = (x, y)
+	thickness = 1
+	new_img = cv2.circle(cv_img, center_coordinates, radius, color, thickness)
+
+	# write back image with circle into image
+	image.import_CV(new_img)
+
+
+
+def getCircularRegion(image, x, y, radius):
+	"""
+	Returns a list of pixels inside a region
+	"""
+	# Reading an image in default mode
+	# cv_img = image.export_CV()
+
+	# create mask with zeros
+	mask = np.zeros((image.height(), image.width(), 3), dtype=np.uint8)
+
+	# define a circle as mask
+	center_coordinates = (x, y)
+	color = (255,255,255)
+	thickness = cv2.FILLED
+	cv2.circle(mask, center_coordinates, radius, color, thickness)
+
+	# get color values
+	# print("cv_img: ", cv_img)
+	# values = cv_img[np.where((mask == (255,255,255)).all(axis=2))]
+	# print("value: ", values)
+	#return values
+	#w = np.where((mask == (255,255,255)).all(axis=2))
+	w = np.argwhere(mask == (255,255,255))
+	# q = np.nonzero(mask == (255,255,255))
+	# print("q: ", q)
+	# print("w: ", w)
+	return w
+
+
+
+def countDCells(image, cells, x, y, radius):
 	"""
 	Counts the D cells in a given Radius.
-	@param cells 		empty cell-set that adds additional info to the image
-	@param x 			x pos of the center
-	@param y 			y pos of the center
-	@param mh_radius	manhattan radius
+	@param cells 	empty cell-set that adds additional info to the image
+	@param x 		x pos of the center
+	@param y 		y pos of the center
+	@param radius	radius
 	"""
 	cellCount = 0
 
-	# cell got already visited
-	if cells.gotVisited(x, y) == True:
-		return 0
+	regionList = getCircularRegion(image, x, y, radius)
+	# print("regionList: ", regionList)
 
-	# is valid coords:
-	if image.isValidCoord(x, y) == False:
-		return 0
+	for r in regionList:
+		# update coords:
+		x = r[0]
+		y = r[1]
 
-	# recursion break-condition
-	if mh_radius < 0:
-		return 0
+		# cell got already visited
+		# or coords are invalid:
+		if cells.gotVisited(x, y) == True or \
+		   image.isValidCoord(x, y) == False:
+			continue
 
-	# get pixel
-	cellInfo = cells.get(x, y)
-	if cellInfo == "D":
-#		print("D-Cell at : (", x, ", ", y, ")", " inside r: ", mh_radius)
-		cellCount += 1
-#	else:
-#		print("U-Cell at : (", x, ", ", y, ")", " inside r: ", mh_radius)
+		# get pixel
+		cellInfo = cells.get(x, y)
+		if cellInfo == "D":
+			cellCount += 1
 
-	# set cell to visited
-	cells.increaseVisits(x, y)
+		# set cell to visited
+		cells.increaseVisits(x, y)
+		# if(radius == 6):
+		# 	image.setPixel_HSV(x, y, [0.3,0.6,0.8])
 
-	# print("hsv: ", HSV)
-	stillToVisit = []
-	lookup = [ [1,0], [-1,0], [0,1], [0,-1] ]
-
-	if mh_radius == 0:
-		return cellCount
-
-	for l in lookup:
-		loc_x = x + l[0]
-		loc_y = y + l[1]
-#		print("look at : (", loc_x, ", ", loc_y, ")")
-
-		# stop at border; no wrap-around!!!
-		# and if cell is still unvisited
-		if  image.isValidCoord(loc_x, loc_y) and \
-			cells.gotVisited(loc_x, loc_y) == False:
-#			print("investigate at : (", loc_x, ", ", loc_y, ")")
-
-			# remember still to visit pixels
-			stillToVisit.append([loc_x, loc_y])
-#			cellCount += countDCells(img, cells, loc_x, loc_y, mh_radius-1)
-
-	# visit remembered pixels with smaller radius and increase cellCount
-	for s in stillToVisit:
-		# recursion:
-		cellCount += countDCells(image, cells, s[0], s[1], mh_radius-1)
-		#print("~ cellCount : ", cellCount)
+	# print("cellCount: ", cellCount)
 	return cellCount
 
 
-def generate_random(image):
+def rgb2hsv(rgb):
+	hsv = colorsys.rgb_to_hsv(rgb[0], rgb[1], rgb[2])
+	return list(hsv)
+
+
+def generate_random(image, rgb_color_D, rgb_color_U):
 	# create random image
+	color_D = rgb2hsv(rgb_color_D)
+	color_U = rgb2hsv(rgb_color_U)
+	print("color_D: ", color_D)
+	print("color_U: ", color_U)
+
 	for u in range(image.height()):
 		for v in range(image.width()):
-			image.setPixel_HSV(u, v, [0,0,random.randint(0,1)])
+			rand = random.randint(0,1)
+			if rand == 0:
+				image.setPixel_HSV(u, v, color_D)
+			else:
+				image.setPixel_HSV(u, v, color_U)
 
-def CA_young(image, incubatorWeight, color_D, color_U):
+
+
+def CA_young(image, incubatorWeight, rgb_color_D, rgb_color_U):
+	# we need to know the image dimensions
 	width  = image.width()
 	height = image.height()
+	print("Image size: ", width, " x ", height)
+	print("incubatorWeight: ", incubatorWeight)
 
-	# we need to know the image dimensions
-	print ("Image size: ", width, " x ", height)
+	color_D = rgb2hsv(rgb_color_D)
+	color_U = rgb2hsv(rgb_color_U)
+	print("color_D: ", color_D)
+	print("color_U: ", color_U)
 
 	cells = Cells(image, color_D)
+	# cells.printDiscs()
+	# cells.print()
 	# 1st pass : calculate cells Disc and apply cells-set
 	print("1st pass start")
 	for u in range(height):
 		for v in range(width):
-#			print("### visit pixel: (", u, ", ", v, ")")
 			cells.resetVisited()
 			AD = countDCells(image, cells, u, v, 3)
-#			cells.printVisits()
+			# cells.printVisits()
+
 			cells.resetVisited()
 			ID = countDCells(image, cells, u, v, 6) - AD
-#			cells.printVisits()
-			Disc = AD - incubatorWeight * ID
+			# cells.printVisits()
 
-			if (Disc > 0):
-#				print("### formula: ", Disc, " = ", AD, " - ", incubatorWeight, " * ", ID)
-				cells.set(u, v, "D")
-			elif (Disc < 0):
-#				print("### formula: ", Disc, " = ", AD, " - ", incubatorWeight, " * ", ID)
-				cells.set(u, v, "U")
-
+			# This computation happens to all cells at the same time,
+			# therefore we must defer the setting of the color to a 2nd step.
+			disc = AD - incubatorWeight * ID
+			cells.setDisc(u, v, disc)
+	# debug-output:
+	# print("disc = AD - incubatorWeight * ID")
+	# print(disc, " = ", AD, " - ", incubatorWeight, " * ", ID)
+	# print(disc, " = ", AD, " - ", incubatorWeight * ID)
+	# print(disc, " = ", AD - incubatorWeight * ID)
+	cells.printDiscs()
+	cells.print()
+	#cells.printVisits()
 	print("2nd pass start")
 	# 2nd pass : apply cells to image:
 	for u in range(height):
 		for v in range(width):
-			if cells.get(u, v) == "D":
-				image.setPixel_RGBA(u, v, color_D)
-			elif cells.get(u, v) == "U":
-				image.setPixel_RGBA(u, v, color_U)
-
-#	cells.print()
+			d = cells.getDisc(u, v)
+			if (d > 0):
+				cells.set(u, v, "D")
+				image.setPixel_HSV(u, v, color_D)
+			elif (d < 0):
+				cells.set(u, v, "U")
+				image.setPixel_HSV(u, v, color_U)
+	print("finished")

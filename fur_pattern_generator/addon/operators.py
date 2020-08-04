@@ -44,7 +44,24 @@ class FPG_OT_generate_random(bpy.types.Operator):
 
 	def execute(self, context):
 		image = fpg.Image(context.edit_image.name)
-		fpg.generate_random(image)
+		imageData = bpy.data.materials[0]
+		print(
+			"imageData.my_settings.color_D: ",
+			imageData.my_settings.color_D[0], ", ",
+			imageData.my_settings.color_D[1], ", ",
+			imageData.my_settings.color_D[2], ", "
+		)
+		print(
+			"imageData.my_settings.color_U: ",
+			imageData.my_settings.color_U[0], ", ",
+			imageData.my_settings.color_U[1], ", ",
+			imageData.my_settings.color_U[2], ", "
+		)
+		fpg.generate_random(
+			image,
+			imageData.my_settings.color_D,
+			imageData.my_settings.color_U
+		)
 		return {'FINISHED'}
 
 
