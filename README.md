@@ -1,12 +1,17 @@
 # fur_pattern_generator
-This is a blender add-on for generating fur textures.
+With this blender add-on you can generate textures in the shape of the stripes
+and dots on animals, such as leopards and tigers.
 
-You can generate textures with it, that use a Cellular Automata to simulate
-the stripes and dots on animals such as leopards and tigers.
-
-The algorithm used for it is the one defined by David Young, that is based on cellular automata:
+The algorithm used for it is the one defined by David Young, that is based on
+cellular automata and is using activator and inhibator genes that are sent out
+from melanocytes to cells in their neighborhood:
 - https://users.math.yale.edu/public_html/People/frame/Fractals/Panorama/Biology/Leopard/Leopard.html
 - http://ccl.northwestern.edu/netlogo/models/Fur
+
+# Table of Contents
+1. [Usage](#usage)
+2. [Development](#development)
+3. [Installation](#installation)
 
 ## Usage:
 
