@@ -4,8 +4,8 @@ and dots on animals, such as leopards and tigers.
 
 The algorithm used for it is the one defined by David Young. It is based on
 cellular automata and is simulating the pigment-cells (melanocytes) inside of
-mammals, that are sending out activator and inhibator genes into their
-neighborhood:
+mammals, that are sending out activator and inhibitor genes into their
+neighborhood cells:
 - https://users.math.yale.edu/public_html/People/frame/Fractals/Panorama/Biology/Leopard/Leopard.html
 - http://ccl.northwestern.edu/netlogo/models/Fur
 

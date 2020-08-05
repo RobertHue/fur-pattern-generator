@@ -2,8 +2,20 @@ import bpy
 
 class PropertySettings(bpy.types.PropertyGroup):
 
+	r_activator: bpy.props.IntProperty(
+		name="Radius Of Activator",
+		default=3,
+		min=0,
+		max=10
+	)
+	r_inhibitor: bpy.props.IntProperty(
+		name="Radius Of Inhibitor",
+		default=6,
+		min=0,
+		max=10
+	)
 	w: bpy.props.FloatProperty(
-		name="Incubator Weight w",
+		name="Inhibitor Weight w",
 		default=0.69,
 		min=0.0,
 		max=1.0

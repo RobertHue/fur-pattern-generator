@@ -30,6 +30,8 @@ class FPG_OT_ca_young(bpy.types.Operator):
 		imageData = bpy.data.materials[0]
 		fpg.CA_young(
 			image,
+			imageData.my_settings.r_activator,
+			imageData.my_settings.r_inhibitor,
 			imageData.my_settings.w,
 			imageData.my_settings.color_D,
 			imageData.my_settings.color_U

@@ -215,7 +215,7 @@ def drawCircle(image, color, x, y, radius):
 
 
 
-def getCircularRegion(image, x, y, radius):
+def getCircularNeighborhood(image, x, y, radius):
 	"""
 	Returns a list of pixels inside a region
 	"""
@@ -230,18 +230,67 @@ def getCircularRegion(image, x, y, radius):
 	color = (255,255,255)
 	thickness = cv2.FILLED
 	cv2.circle(mask, center_coordinates, radius, color, thickness)
+	n = np.argwhere(mask == (255,255,255))
+	return n
 
-	# get color values
-	# print("cv_img: ", cv_img)
-	# values = cv_img[np.where((mask == (255,255,255)).all(axis=2))]
-	# print("value: ", values)
-	#return values
-	#w = np.where((mask == (255,255,255)).all(axis=2))
-	w = np.argwhere(mask == (255,255,255))
-	# q = np.nonzero(mask == (255,255,255))
-	# print("q: ", q)
-	# print("w: ", w)
-	return w
+
+
+def getManhattanNeighborhood(image, cells, x, y, radius):
+	lookup = [[1,0],[-1,0],[0,1],[0,-1], [1,1], [-1,-1], [1,-1], [1,-1]] # moore-neighboorhood
+	# lookup = [[1,0],[-1,0],[0,1],[0,-1]]
+	n = []
+
+	# mark all the pixels as not visited
+	cells.resetVisited()
+
+	# create a queue for BFS
+	queue = []
+
+	# are valid coords inside the image:
+	if image.isValidCoord(x, y) == False:
+		return n
+
+	# Mark the source node as
+	# visited and enqueue it
+	coords = [x,y]
+	n = [coords]
+	cells.increaseVisits(x, y)
+	queue.append(coords)
+
+	while radius >= 0 and queue:
+		level_size = len(queue)
+
+		while level_size > 0:
+			level_size -= 1
+
+			# dequeue a vertex from queue and print it
+			s = queue.pop(0)
+			n += [s]
+
+			if not queue:
+				radius -= 1
+
+			# get all adjacent pixels of dequeued pixel s
+			# if a adjacen has not been visited, then mark it visited and enqueue it
+			for l in lookup:
+				new_x = s[0] + l[0]
+				new_y = s[1] + l[1]
+
+				# are valid coords inside the image:
+				if image.isValidCoord(new_x, new_y) == False:
+					continue
+
+				# cell got already visited
+				if cells.gotVisited(new_x, new_y) == True:
+					continue
+
+				coords = [new_x, new_y]
+				queue.append(coords)
+				cells.setVisited(new_x, new_y)
+				# cells.printVisits()
+				# print()
+		radius -= 1
+	return n
 
 
 
@@ -255,29 +304,19 @@ def countDCells(image, cells, x, y, radius):
 	"""
 	cellCount = 0
 
-	regionList = getCircularRegion(image, x, y, radius)
+	regionList = getManhattanNeighborhood(image, cells, x, y, radius)
 	# print("regionList: ", regionList)
+
 
 	for r in regionList:
 		# update coords:
 		x = r[0]
 		y = r[1]
 
-		# cell got already visited
-		# or coords are invalid:
-		if cells.gotVisited(x, y) == True or \
-		   image.isValidCoord(x, y) == False:
-			continue
-
 		# get pixel
 		cellInfo = cells.get(x, y)
 		if cellInfo == "D":
 			cellCount += 1
-
-		# set cell to visited
-		cells.increaseVisits(x, y)
-		# if(radius == 6):
-		# 	image.setPixel_HSV(x, y, [0.3,0.6,0.8])
 
 	# print("cellCount: ", cellCount)
 	return cellCount
@@ -305,12 +344,12 @@ def generate_random(image, rgb_color_D, rgb_color_U):
 
 
 
-def CA_young(image, incubatorWeight, rgb_color_D, rgb_color_U):
+def CA_young(image, r_activator, r_inhibitor, w, rgb_color_D, rgb_color_U):
 	# we need to know the image dimensions
 	width  = image.width()
 	height = image.height()
 	print("Image size: ", width, " x ", height)
-	print("incubatorWeight: ", incubatorWeight)
+	print("w: ", w)
 
 	color_D = rgb2hsv(rgb_color_D)
 	color_U = rgb2hsv(rgb_color_U)
@@ -325,22 +364,22 @@ def CA_young(image, incubatorWeight, rgb_color_D, rgb_color_U):
 	for u in range(height):
 		for v in range(width):
 			cells.resetVisited()
-			AD = countDCells(image, cells, u, v, 3)
+			AD = countDCells(image, cells, u, v, r_activator)
 			# cells.printVisits()
 
 			cells.resetVisited()
-			ID = countDCells(image, cells, u, v, 6) - AD
+			ID = countDCells(image, cells, u, v, r_inhibitor) - AD
 			# cells.printVisits()
 
 			# This computation happens to all cells at the same time,
 			# therefore we must defer the setting of the color to a 2nd step.
-			disc = AD - incubatorWeight * ID
+			disc = AD - w * ID
 			cells.setDisc(u, v, disc)
 	# debug-output:
-	# print("disc = AD - incubatorWeight * ID")
-	# print(disc, " = ", AD, " - ", incubatorWeight, " * ", ID)
-	# print(disc, " = ", AD, " - ", incubatorWeight * ID)
-	# print(disc, " = ", AD - incubatorWeight * ID)
+	# print("disc = AD - w * ID")
+	# print(disc, " = ", AD, " - ", w, " * ", ID)
+	# print(disc, " = ", AD, " - ", w * ID)
+	# print(disc, " = ", AD - w * ID)
 	cells.printDiscs()
 	cells.print()
 	#cells.printVisits()
@@ -355,4 +394,6 @@ def CA_young(image, incubatorWeight, rgb_color_D, rgb_color_U):
 			elif (d < 0):
 				cells.set(u, v, "U")
 				image.setPixel_HSV(u, v, color_U)
+	cells.printDiscs()
+	cells.print()
 	print("finished")

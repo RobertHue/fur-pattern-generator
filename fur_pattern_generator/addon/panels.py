@@ -31,6 +31,8 @@ class FPG_PT_ui(bpy.types.Panel):
 		layout.operator("fpg.ca_young")
 
 		material = bpy.data.materials[0]
+		layout.prop(material.my_settings, "r_activator")
+		layout.prop(material.my_settings, "r_inhibitor")
 		layout.prop(material.my_settings, "w")
 		layout.prop(material.my_settings, "color_D")
 		layout.prop(material.my_settings, "color_U")
