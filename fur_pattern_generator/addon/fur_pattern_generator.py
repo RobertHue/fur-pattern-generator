@@ -235,8 +235,7 @@ def getMooreNeighborhood(image, cells, source_pixel, radius):
 	cells.resetVisited()  # to memorize that the cell has been visited once
 
 	# Are coords inside the image; hence valid?
-	x = source_pixel[0]
-	y = source_pixel[1]
+	x, y  = [pixel[i] for i in (0, 1)]
 	if not image.isValidCoord(x, y):
 		return neighborhood
 
