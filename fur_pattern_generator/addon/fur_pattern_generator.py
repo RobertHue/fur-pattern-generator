@@ -16,23 +16,23 @@ class Cells:
     """
 
     def __init__(self, image, discriminator_color):
-        self.width  = image.width()
+        self.width = image.width()
         self.height = image.height()
-        self.disc = [[0.0
-            for i in range(self.width)]
-            for j in range(self.height)]
+        self.disc = [[0.0 for i in range(self.width)] for j in range(self.height)]
 
-        self.visited = [[0
-            for i in range(self.width)]
-            for j in range(self.height)]
+        self.visited = [[0 for i in range(self.width)] for j in range(self.height)]
 
-        self.cells = [["D"
-            if image.getPixel_HSV(i,j)[0] == discriminator_color[0] and
-               image.getPixel_HSV(i,j)[1] == discriminator_color[1] and
-               image.getPixel_HSV(i,j)[2] == discriminator_color[2]
-            else 'U'
-            for i in range(self.width)]
-            for j in range(self.height)]
+        self.cells = [
+            [
+                "D"
+                if image.getPixel_HSV(i, j)[0] == discriminator_color[0]
+                and image.getPixel_HSV(i, j)[1] == discriminator_color[1]
+                and image.getPixel_HSV(i, j)[2] == discriminator_color[2]
+                else "U"
+                for i in range(self.width)
+            ]
+            for j in range(self.height)
+        ]
 
     def set_disc(self, u, v, disc):
         self.disc[v][u] = disc
@@ -53,8 +53,7 @@ class Cells:
             return False
 
     def reset_visited(self):
-        self.visited = [[0 for i in range(self.width)]
-            for j in range(self.height)]
+        self.visited = [[0 for i in range(self.width)] for j in range(self.height)]
 
     def set(self, u, v, state):
         self.cells[v][u] = state
@@ -63,47 +62,46 @@ class Cells:
         return self.cells[v][u]
 
     def reset(self):
-        self.cells = [[0 for i in range(self.width)]
-            for j in range(self.height)]
+        self.cells = [[0 for i in range(self.width)] for j in range(self.height)]
 
     def print(self):
         print()
         print("print: ")
         for row in self.cells[::-1]:
-            print('[', end='')
+            print("[", end="")
             for val in row:
-                print('{:1}'.format(val), end='')
-            print(']')
+                print("{:1}".format(val), end="")
+            print("]")
         print()
 
     def print_visits(self):
         print()
         print("printVisits: ")
         for row in self.visited[::-1]:
-            print('[', end='')
+            print("[", end="")
             for val in row:
-                if (val >= 1):
-                    print('{:2}'.format(val), end='')
-                elif (val == 0):
-                    print('{:2}'.format(' '), end='')
+                if val >= 1:
+                    print("{:2}".format(val), end="")
+                elif val == 0:
+                    print("{:2}".format(" "), end="")
                 else:
-                    print('{:2}'.format('E'), end='')
-            print(']')
+                    print("{:2}".format("E"), end="")
+            print("]")
         print()
 
     def print_discs(self):
         print()
         print("print discriminators: ")
         for row in self.disc[::-1]:
-            print('[', end='')
+            print("[", end="")
             for d in row:
                 if d > 0:
-                    print('{:2}'.format('+'), end='')
+                    print("{:2}".format("+"), end="")
                 elif d < 0:
-                    print('{:2}'.format('-'), end='')
+                    print("{:2}".format("-"), end="")
                 else:
-                    print('{:2}'.format(' '), end='')
-            print(']')
+                    print("{:2}".format(" "), end="")
+            print("]")
         print()
 
 
@@ -111,6 +109,7 @@ class Image:
     """
     Pass an image file loaded into Blender when creating an Image-object.
     """
+
     def __init__(self, image_file):
         self._img = bpy.data.images[image_file]
 
@@ -122,18 +121,18 @@ class Image:
 
     def export_cv(self):
         pixel_list = list(self._img.pixels)
-        rgb_pixels = [x for i, x in enumerate(pixel_list) if (i+1)%4 != 0]
+        rgb_pixels = [x for i, x in enumerate(pixel_list) if (i + 1) % 4 != 0]
         a = np.array(rgb_pixels)
         b = np.reshape(a, (self.height(), self.width(), 3))
         rgba = np.ones((self.height(), self.width(), 3), dtype=np.uint8)
-        rgba[:,:,:] = np.uint8(b) * 255
+        rgba[:, :, :] = np.uint8(b) * 255
         cv_image = np.flip(rgba, axis=[0, 2])
         return np.float32(cv_image)
 
     def import_cv(self, cv_image):
         rgb = np.flip(cv_image, axis=[0, 2])
         rgba = np.ones((self.height(), self.width(), 4), dtype=np.float32)
-        rgba[:,:,:-1] = np.float32(rgb) / 255
+        rgba[:, :, :-1] = np.float32(rgb) / 255
         self._img.pixels = rgba.flatten()
 
     def is_coord_valid(self, x, y):
@@ -141,8 +140,7 @@ class Image:
         Returns 'True', if the supplied coordinates
         are in the Image. Otherwhise returns 'False'.
         """
-        if x >= 0 and x < self._img.size[0] and \
-           y >= 0 and y < self._img.size[1]:
+        if x >= 0 and x < self._img.size[0] and y >= 0 and y < self._img.size[1]:
             return True
         return False
 
@@ -153,9 +151,9 @@ class Image:
         """
         if self.is_coord_valid(x, y):
             index = (y * self.width() + x) * 4
-            cell = self._img.pixels[index:index+4]
+            cell = self._img.pixels[index : index + 4]
             return cell
-        return [0,0,0,0]
+        return [0, 0, 0, 0]
 
     def get_pixel_hsv(self, x, y):
         """
@@ -164,9 +162,9 @@ class Image:
         """
         if self.is_coord_valid(x, y):
             rgba = self.get_pixel_rgba(x, y)
-            hsv  = colorsys.rgb_to_hsv(rgba[0], rgba[1], rgba[2])
+            hsv = colorsys.rgb_to_hsv(rgba[0], rgba[1], rgba[2])
             return hsv
-        return [0,0,0,0]
+        return [0, 0, 0, 0]
 
     def set_pixel_rgba(self, x, y, rgba):
         """
@@ -175,7 +173,7 @@ class Image:
         """
         if self.is_coord_valid(x, y):
             index = (y * self.width() + x) * 4
-            self._img.pixels[index:index+4] = rgba
+            self._img.pixels[index : index + 4] = rgba
             return True
         return False
 
@@ -185,7 +183,7 @@ class Image:
         If no valid coords 'x' and 'y' are supplied, then only 'False' is returned.
         """
         if self.is_coord_valid(x, y):
-            rgb  = colorsys.hsv_to_rgb(hsv[0], hsv[1], hsv[2])
+            rgb = colorsys.hsv_to_rgb(hsv[0], hsv[1], hsv[2])
             rgba = list(rgb)
             rgba.append(1)
             return self.set_pixel_rgba(x, y, rgba)
@@ -197,7 +195,7 @@ def draw_circle(image, color, x, y, radius):
     Draws a circle into image.
     """
     # Reading an image in default mode
-    cv_img = (image.export_CV())
+    cv_img = image.export_CV()
 
     # draw a circle as mask
     center_coordinates = (x, y)
@@ -214,24 +212,33 @@ def get_circular_neighborhood(image, source_pixel, radius):
     mask = np.zeros((image.height(), image.width(), 3), dtype=np.uint8)
 
     # define a circle as mask
-    x, y  = [source_pixel[i] for i in (0, 1)]
+    x, y = [source_pixel[i] for i in (0, 1)]
     center_coordinates = (x, y)
-    color = (255,255,255)
+    color = (255, 255, 255)
     thickness = cv2.FILLED
     cv2.circle(mask, center_coordinates, radius, color, thickness)
-    result_n = np.argwhere(mask == (255,255,255))
+    result_n = np.argwhere(mask == (255, 255, 255))
     return result_n
 
 
 def get_moore_neighborhood(image, cells, source_pixel, radius):
     """Gets the Moore neighborhood as a list of pixels including the source pixel."""
-    moore_lookup = [[1,0],[-1,0],[0,1],[0,-1], [1,1], [-1,-1], [1,-1], [1,-1]]
+    moore_lookup = [
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1],
+        [1, 1],
+        [-1, -1],
+        [1, -1],
+        [1, -1],
+    ]
     result_n = []  # the neighboorhood result
     queue = []  # create a queue for BFS
     cells.resetVisited()  # to memorize that the cell has been visited once
 
     # Are coords inside the image; hence valid?
-    x, y  = [source_pixel[i] for i in (0, 1)]
+    x, y = [source_pixel[i] for i in (0, 1)]
     if not image.isValidCoord(x, y):
         return result_n
 
@@ -314,7 +321,7 @@ def generate_random(image, rgb_color_d, rgb_color_u):
 
     for u in range(image.height()):
         for v in range(image.width()):
-            rand = random.randint(0,1)
+            rand = random.randint(0, 1)
             if rand == 0:
                 image.set_pixel_hsv(u, v, color_d)
             else:
@@ -333,7 +340,7 @@ def cellular_automata(image, r_activator, r_inhibitor, w, rgb_color_d, rgb_color
         rgb_color_U (_type_): _description_
     """
     # we need to know the image dimensions
-    width  = image.width()
+    width = image.width()
     height = image.height()
     print("Image size: ", width, " x ", height)
     print("w: ", w)

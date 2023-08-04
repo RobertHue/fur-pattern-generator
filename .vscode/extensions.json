@@ -5,5 +5,6 @@
 		"blenderfreetimeprojects.blender-python-code-templates",
 		"yzhang.markdown-all-in-one",
 		"davidanson.vscode-markdownlint",
+		"ms-python.black-formatter"
 	]
 }

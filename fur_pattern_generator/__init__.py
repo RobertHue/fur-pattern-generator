@@ -12,33 +12,36 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 bl_info = {
-	"name" : "fur_pattern_generator",
-	"author" : "RobertHue",
-	"description" : "",
-	"blender" : (2, 80, 0),
-	"version" : (0, 0, 1),
-	"location" : "",
-	"warning" : "",
-	"category" : "Generic"
+    "name": "fur_pattern_generator",
+    "author": "RobertHue",
+    "description": "",
+    "blender": (2, 80, 0),
+    "version": (0, 0, 1),
+    "location": "",
+    "warning": "",
+    "category": "Generic",
 }
 
-print("""
+print(
+    """
 	__file__={0:<35}
 	__name__={1:<20}
 	__package__={2:<20}
-	"""
-	.format(__file__,__name__,str(__package__))
+	""".format(
+        __file__, __name__, str(__package__)
+    )
 )
 
 from . import addon
 
 
 def register():
-	addon.register()
+    addon.register()
 
 
 def unregister():
-	addon.unregister()
+    addon.unregister()
+
 
 # if __name__ == "__main__":
 # 	obj = bpy.context.object

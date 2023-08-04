@@ -6,12 +6,14 @@
 # See: https://napuzba.com/a/import-error-relative-no-parent
 #
 
-print("""
+print(
+    """
 	__file__={0:<35}
 	__name__={1:<20}
 	__package__={2:<20}
-	"""
-	.format(__file__,__name__,str(__package__))
+	""".format(
+        __file__, __name__, str(__package__)
+    )
 )
 
 import fur_pattern_generator
