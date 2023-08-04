@@ -11,17 +11,19 @@ neighborhood cells:
 - https://users.math.yale.edu/public_html/People/frame/Fractals/Panorama/Biology/Leopard/Leopard.html
 - http://ccl.northwestern.edu/netlogo/models/Fur
 
----
-
 ## Table of Contents
 
-1. [Usage](#usage)
-2. [Development](#development)
-3. [Installation](#installation)
-
----
-
-[[_TOC_]]
+- [fur\_pattern\_generator](#fur_pattern_generator)
+  - [Table of Contents](#table-of-contents)
+  - [Repository structure](#repository-structure)
+  - [Getting Started](#getting-started)
+    - [Installation prerequisites](#installation-prerequisites)
+  - [Usage](#usage)
+  - [Development](#development)
+    - [Good to know](#good-to-know)
+    - [Coding Conventions](#coding-conventions)
+    - [Visual Studio Code](#visual-studio-code)
+      - [Hints](#hints)
 
 ## Repository structure
 
@@ -36,7 +38,7 @@ The repository is structured as follows:
 
 ## Getting Started
 
-### Installing prerequisites
+### Installation prerequisites
 
 - [Git]
 - [VSCode]
