@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "fur-pattern-generator"
+version = "0.1.0"
+description = ""
+authors = ["RobertHue <robert.huem@gmail.com>"]
+readme = "README.md"
+packages = [{include = "fur_pattern_generator"}]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.11.dev0"
+bpy = "^3.6.0"
+numpy = "^1.25.2"
+opencv-python = "^4.8.0.74"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

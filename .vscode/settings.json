@@ -1,18 +1,24 @@
 {
-    "files.trimTrailingWhitespace": true,
-    "files.trimFinalNewlines": true,
-    "files.insertFinalNewline": true,
-    "editor.rulers": [80,120],
-    "editor.tabSize": 4,
-    "editor.insertSpaces": false,
-    "files.exclude": {
-        "**/.git": true,
-        "**/.svn": true,
-        "**/.hg": true,
-        "**/CVS": true,
-        "**/.DS_Store": true,
-        "**/__pycache__": true
-    },
-    "python.linting.enabled": true,
-    "python.linting.pylintEnabled": true,
+	// files
+	"files.trimTrailingWhitespace": true,
+	"files.trimFinalNewlines": true,
+	"files.insertFinalNewline": true,
+	// editor
+	"editor.tabSize": 4,
+	"editor.rulers": [
+		80
+	],
+	"editor.renderWhitespace": "trailing",
+	"editor.suggestSelection": "first",
+	"editor.formatOnSave": true,
+	"editor.bracketPairColorization.enabled": false,
+	"editor.insertSpaces": false,
+	"files.exclude": {
+		"**/.git": true,
+		"**/__pycache__": true
+	},
+	// python
+	"[python]": {
+		"editor.defaultFormatter": "ms-python.black-formatter"
+	},
 }

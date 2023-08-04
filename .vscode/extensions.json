@@ -1,0 +1,9 @@
+{
+	"recommendations": [
+		"donjayamanne.python-extension-pack",
+		"jacqueslucke.blender-development",
+		"blenderfreetimeprojects.blender-python-code-templates",
+		"yzhang.markdown-all-in-one",
+		"davidanson.vscode-markdownlint",
+	]
+}
