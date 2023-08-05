@@ -3,19 +3,19 @@
 	"files.trimTrailingWhitespace": true,
 	"files.trimFinalNewlines": true,
 	"files.insertFinalNewline": true,
-	// editor
-	"editor.tabSize": 4,
-	"editor.rulers": [
-		80
-	],
-	"editor.renderWhitespace": "trailing",
-	"editor.suggestSelection": "first",
-	"editor.bracketPairColorization.enabled": false,
-	"editor.insertSpaces": false,
 	"files.exclude": {
 		"**/.git": true,
 		"**/__pycache__": true
 	},
+	// editor
+	"editor.tabSize": 4,
+	"editor.renderWhitespace": "trailing",
+	"editor.suggestSelection": "first",
+	"editor.bracketPairColorization.enabled": false,
+	"editor.insertSpaces": false,
+	"editor.rulers": [
+		80
+	],
 	// python
 	"[python]": {
 		"editor.formatOnSave": true,
