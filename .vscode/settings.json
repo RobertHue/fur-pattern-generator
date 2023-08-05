@@ -10,7 +10,6 @@
 	],
 	"editor.renderWhitespace": "trailing",
 	"editor.suggestSelection": "first",
-	"editor.formatOnSave": true,
 	"editor.bracketPairColorization.enabled": false,
 	"editor.insertSpaces": false,
 	"files.exclude": {
@@ -19,12 +18,14 @@
 	},
 	// python
 	"[python]": {
+		"editor.formatOnSave": true,
 		"editor.defaultFormatter": "ms-python.black-formatter"
 	},
+	"python.languageServer": "Pylance",
+	"python.analysis.autoFormatStrings": true,
 	// markdown
 	"markdown.validate.enabled": true,
 	"[markdown]": {
-		"files.trimTrailingWhitespace": true,
 		"editor.formatOnSave": true,
 		"editor.defaultFormatter": "yzhang.markdown-all-in-one",
 		"editor.wordWrap": "wordWrapColumn",
