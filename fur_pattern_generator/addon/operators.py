@@ -1,5 +1,5 @@
 import bpy
-from mathutils import noise, Vector
+from mathutils import Vector, noise
 
 from . import fur_pattern_generator as fpg
 from . import properties as props
