@@ -18,3 +18,27 @@ pytest = "^7.4.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+target-version = "py39"
+select = ["F", "E"]
+extend-select = ["W", "N", "UP", "B", "A", "C4", "PT", "SIM", "PD", "PLE", "RUF"]
+ignore = ["SIM300", "N", "SIM", "E402", "B"]
+fixable = ["F", "E", "W", "UP", "B", "A", "C4"]
+unfixable = []
+line-length = 80
+extend-exclude = ["tests", "test"]
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+[tool.ruff.isort]
+force-single-line = true
+force-sort-within-sections = false
+lines-after-imports = 2
+[tool.ruff.mccabe]
+max-complexity = 10
+[tool.ruff.pycodestyle]
+ignore-overlong-task-comments = true
+[tool.ruff.pydocstyle]
+convention = "numpy"
+[tool.ruff.flake8-annotations]
+allow-star-arg-any = false
+ignore-fully-untyped = false
