@@ -6,7 +6,7 @@
 	// editor
 	"editor.tabSize": 4,
 	"editor.rulers": [
-		120
+		80
 	],
 	"editor.renderWhitespace": "trailing",
 	"editor.suggestSelection": "first",
