@@ -24,8 +24,7 @@ jobs:
         poetry install
     - name: Testing
       run: |
-        poetry shell
-        python -m pytest tests
+        poetry run python -m pytest tests
 
   build-linux:
     runs-on: ubuntu-latest
@@ -44,9 +43,8 @@ jobs:
         poetry install
     - name: Testing
       run: |
-        poetry shell
-        python -m pytest --cov=fastvector tests
-        python -m codecov
+        poetry run python -m pytest --cov=src tests
+        poetry run python -m codecov
 
   build-macos:
     runs-on: macos-latest
@@ -65,5 +63,4 @@ jobs:
         poetry install
     - name: Testing
       run: |
-        poetry shell
-        python -m pytest tests
+        poetry run python -m pytest tests
