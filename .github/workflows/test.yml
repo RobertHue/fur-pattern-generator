@@ -21,7 +21,6 @@ jobs:
         python -m pip install --user pipx
         python -m pipx ensurepath
         pipx install poetry
-        poetry install --dev-dependency
         poetry install
     - name: Testing
       run: |
@@ -41,7 +40,6 @@ jobs:
         python -m pip install --user pipx
         python -m pipx ensurepath
         pipx install poetry
-        poetry install --dev-dependency
         poetry install
     - name: Testing
       run: |
@@ -62,7 +60,6 @@ jobs:
         python -m pip install --user pipx
         python -m pipx ensurepath
         pipx install poetry
-        poetry install --dev-dependency
         poetry install
     - name: Testing
       run: |
