@@ -6,7 +6,9 @@ print(
 	"""
 )
 
-from . import fur_pattern_generator, operators, panels, properties
+from . import operators
+from . import panels
+from . import properties
 
 
 def register():

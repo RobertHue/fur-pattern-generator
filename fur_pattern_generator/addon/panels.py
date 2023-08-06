@@ -1,8 +1,5 @@
 import bpy
 
-from . import operators
-from . import properties as props
-
 
 class FPG_PT_ui(bpy.types.Panel):
     """Creates a Panel in the Image Editor window"""

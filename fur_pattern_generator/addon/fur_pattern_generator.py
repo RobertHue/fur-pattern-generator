@@ -2,12 +2,13 @@
 import colorsys
 import random
 
+import numpy as np
+
 # Blender
 import bpy
 
 # 3rd Party
 import cv2
-import numpy as np
 
 
 class Cells:

@@ -1,8 +1,7 @@
 import bpy
-from mathutils import Vector, noise
 
 from . import fur_pattern_generator as fpg
-from . import properties as props
+
 
 print(
     "__file__={:<35} | __name__={:<20} | __package__={:<20}".format(
