@@ -10,7 +10,7 @@ build-backend = "poetry.core.masonry.api"
 # poetry
 [tool.poetry]
 name = "fur-pattern-generator"
-version = "0.2.0"
+version = "src.__version__"
 description = ""
 authors = ["RobertHue <robert.huem@gmail.com>"]
 readme = "README.md"
