@@ -24,6 +24,7 @@ jobs:
         poetry install
     - name: Testing
       run: |
+        poetry shell
         python -m pytest tests
 
   build-linux:
@@ -43,6 +44,7 @@ jobs:
         poetry install
     - name: Testing
       run: |
+        poetry shell
         python -m pytest --cov=fastvector tests
         python -m codecov
 
@@ -63,4 +65,5 @@ jobs:
         poetry install
     - name: Testing
       run: |
+        poetry shell
         python -m pytest tests
