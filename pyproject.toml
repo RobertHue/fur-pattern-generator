@@ -14,7 +14,7 @@ version = "0.1.0"
 description = ""
 authors = ["RobertHue <robert.huem@gmail.com>"]
 readme = "README.md"
-packages = [{include = "fur_pattern_generator"}]
+packages = [{include = "src"}]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.11.dev0"
