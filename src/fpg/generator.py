@@ -326,8 +326,7 @@ def count_d_cells(image: Image, cells: Cells, pos: COORD, r: float) -> int:
 
 
 def rgb2hsv(rgb: COLOR) -> COLOR:
-    hsv = colorsys.rgb_to_hsv(rgb[0], rgb[1], rgb[2])
-    return tuple(hsv)
+    return colorsys.rgb_to_hsv(rgb[0], rgb[1], rgb[2])
 
 
 def generate_random(image, rgb_color_d, rgb_color_u):
