@@ -1,5 +1,9 @@
 # fur_pattern_generator
 
+![Python](https://img.shields.io/badge/python-3.10+-blue)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Build](https://github.com/RobertHue/fur_pattern_generator/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/RobertHue/fur_pattern_generator/actions/workflows/test.yml)
+
 With this blender add-on you can generate textures in the shape of the stripes
 and dots on animals, such as leopards and tigers.
 
