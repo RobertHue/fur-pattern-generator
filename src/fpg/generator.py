@@ -11,6 +11,11 @@ import bpy
 import cv2
 
 
+# ALIASES
+COLOR = tuple[float, float, float]
+COORD = tuple[float, float]
+
+
 class Cells:
     """
     This class defines the cells of the Cellular Automata (CA).
@@ -295,9 +300,7 @@ def get_moore_neighborhood(image, cells, source_pixel, radius):
     return result_n
 
 
-def count_d_cells(
-    image: Image, cells: Cells, pos: tuple(float, float), r: float
-) -> int:
+def count_d_cells(image: Image, cells: Cells, pos: COORD, r: float) -> int:
     """
     Counts the D cells at position pos in a given radius r.
     @param cells     empty cell-set that adds additional info to the image
@@ -322,9 +325,9 @@ def count_d_cells(
     return cell_count
 
 
-def rgb2hsv(rgb):
+def rgb2hsv(rgb: COLOR) -> COLOR:
     hsv = colorsys.rgb_to_hsv(rgb[0], rgb[1], rgb[2])
-    return list(hsv)
+    return tuple(hsv)
 
 
 def generate_random(image, rgb_color_d, rgb_color_u):

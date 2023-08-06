@@ -1,3 +1,5 @@
+from .generator import COORD
+from .generator import COLOR
 from .generator import Cells
 from .generator import Image
 from .generator import draw_circle
@@ -9,6 +11,8 @@ from .generator import generate_random
 from .generator import cellular_automata
 
 __all__ = [
+    "COORD",
+    "COLOR",
     "Cells",
     "Image",
     "draw_circle",
