@@ -32,6 +32,43 @@ ruff = "^0.0.282"
 pyright = "^1.1.320"
 mypy = "^1.4.1"
 pytest = "^7.4.0"
+pytest-cov = "^4.1.0"
+codecov = "^2.1.13"
+
+################################################################################
+# PyTest
+
+[tool.pytest.ini_options]
+minversion = "7.4"
+testpaths = "tests"
+
+[tool.coverage.run]
+branch = true
+parallel = true
+omit = [
+    "src/__init__.py",
+    "src/version.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "raise AssertionError",
+    "raise NotImplementedError",
+]
+
+[tool.coverage.paths]
+source = [
+    "src/*",
+]
+
+[tool.coverage.html]
+directory = "reports"
 
 ################################################################################
 # FORMATTER
