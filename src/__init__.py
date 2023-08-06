@@ -11,12 +11,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from . import addon
+
+from .version import __version__  # noqa
+
+
 bl_info = {
     "name": "fur_pattern_generator",
     "author": "RobertHue",
     "description": "",
     "blender": (2, 80, 0),
-    "version": (0, 0, 1),
+    "version": (0, 2, 0),
     "location": "",
     "warning": "",
     "category": "Generic",
@@ -29,8 +34,6 @@ print(
 	__package__={__package__!s:<20}
 	"""
 )
-
-from . import addon
 
 
 def register():
