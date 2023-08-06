@@ -59,10 +59,10 @@ class Cells:
             [0 for i in range(self.width)] for j in range(self.height)
         ]
 
-    def set(self, u, v, state):
+    def set_cell(self, u, v, state):
         self.cells[v][u] = state
 
-    def get(self, u, v):
+    def get_cell(self, u, v):
         return self.cells[v][u]
 
     def reset(self):
@@ -70,7 +70,7 @@ class Cells:
             [0 for i in range(self.width)] for j in range(self.height)
         ]
 
-    def print(self):
+    def print_cells(self):
         print()
         print("print: ")
         for row in self.cells[::-1]:
@@ -178,7 +178,8 @@ class Image:
     def set_pixel_rgba(self, x, y, rgba):
         """
         Sets the pixel's color at 'x' 'y' with RGBA.
-        If no valid coords 'x' and 'y' are supplied, then only 'False' is returned.
+        If no valid coords 'x' and 'y' are supplied, then only 'False' is
+        returned.
         """
         if self.is_coord_valid(x, y):
             index = (y * self.width() + x) * 4
@@ -189,7 +190,8 @@ class Image:
     def set_pixel_hsv(self, x, y, hsv):
         """
         Sets the pixel's color at 'x' 'y' with HSV.
-        If no valid coords 'x' and 'y' are supplied, then only 'False' is returned.
+        If no valid coords 'x' and 'y' are supplied, then only 'False' is
+        returned.
         """
         if self.is_coord_valid(x, y):
             rgb = colorsys.hsv_to_rgb(hsv[0], hsv[1], hsv[2])
@@ -216,7 +218,8 @@ def draw_circle(image, color, x, y, radius):
 
 
 def get_circular_neighborhood(image, source_pixel, radius):
-    """Gets the Circular neighborhood as a list of pixels including the source pixel."""
+    """Gets the Circular neighborhood as a list of pixels including the source
+    pixel."""
     # create mask with zeros
     mask = np.zeros((image.height(), image.width(), 3), dtype=np.uint8)
 
@@ -230,7 +233,8 @@ def get_circular_neighborhood(image, source_pixel, radius):
 
 
 def get_moore_neighborhood(image, cells, source_pixel, radius):
-    """Gets the Moore neighborhood as a list of pixels including the source pixel."""
+    """Gets the Moore neighborhood as a list of pixels including the source
+    pixel."""
     moore_lookup = [
         [1, 0],
         [-1, 0],
@@ -270,7 +274,8 @@ def get_moore_neighborhood(image, cells, source_pixel, radius):
                 radius -= 1
 
             # get all adjacent pixels of that dequeued src_pixel
-            # if a adjacent has not been visited, then mark it visited and enqueue it
+            # if a adjacent has not been visited, then mark it visited and
+            # enqueue it
             for lookup in moore_lookup:
                 new_x = src_pixel[0] + lookup[0]
                 new_y = src_pixel[1] + lookup[1]
@@ -290,7 +295,9 @@ def get_moore_neighborhood(image, cells, source_pixel, radius):
     return result_n
 
 
-def count_d_cells(image: Image, cells: Cells, pos, r):
+def count_d_cells(
+    image: Image, cells: Cells, pos: tuple(float, float), r: float
+) -> int:
     """
     Counts the D cells at position pos in a given radius r.
     @param cells     empty cell-set that adds additional info to the image
@@ -308,7 +315,7 @@ def count_d_cells(image: Image, cells: Cells, pos, r):
         y = region[1]
 
         # get pixel
-        cell_info = cells.get(x, y)
+        cell_info = cells.get_cell(x, y)
         if cell_info == "D":
             cell_count += 1
 
@@ -380,18 +387,18 @@ def cellular_automata(
             disc = activators - w * inhibitors
             cells.set_disc(u, v, disc)
     cells.print_discs()
-    cells.print()
+    cells.print_cells()
     print("2nd pass start")
     # 2nd pass : apply cells to image:
     for u in range(height):
         for v in range(width):
             d = cells.get_disc(u, v)
             if d > 0:
-                cells.set(u, v, "D")
+                cells.set_cell(u, v, "D")
                 image.set_pixel_hsv(u, v, color_d)
             elif d < 0:
-                cells.set(u, v, "U")
+                cells.set_cell(u, v, "U")
                 image.set_pixel_hsv(u, v, color_u)
     cells.print_discs()
-    cells.print()
+    cells.print_cells()
     print("finished")

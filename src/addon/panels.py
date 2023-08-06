@@ -11,11 +11,13 @@ class FPG_PT_ui(bpy.types.Panel):
     bl_space_type = "IMAGE_EDITOR"
     # this variable tells us where in that view it will be drawn
     bl_region_type = "UI"
-    # this context variable tells when it will be displayed, edit mode, object mode etc
+    # this context variable tells when it will be displayed, edit mode, object
+    # mode etc
     bl_context = ""
     # category is esentially the main UI element, the panels inside it are
     # collapsible dropdown menus drawn under a category
-    # you can add your own name, or an existing one and it will be drawn accordingly
+    # you can add your own name, or an existing one and it will be drawn
+    # accordingly
     bl_category = "Tool"
 
     def draw(self, context):
@@ -30,7 +32,7 @@ class FPG_PT_ui(bpy.types.Panel):
         # place a buttons into the layout to call operators
         layout.separator()
         layout.label(text="generators:")
-        layout.operator("fpg.ca_young")
+        layout.operator("fpg.cellular_automata")
 
         material = bpy.data.materials[0]
         layout.prop(material.my_settings, "r_activator")

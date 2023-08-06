@@ -42,24 +42,3 @@ def register():
 
 def unregister():
     addon.unregister()
-
-
-# if __name__ == "__main__":
-# 	obj = bpy.context.object
-# 	if obj:
-# 		me = obj.data
-# 		if me.uv_textures.active is not None:
-# 			for tf in me.uv_textures.active.data:
-# 				if tf.image:
-# 					img = tf.image.name
-# 					print(img)
-# 	# image = Image("Image.png")
-
-# 	# # create random image
-# 	# for u in range(image.height()):
-# 	# 	for v in range(image.width()):
-# 	# 		image.setPixel_HSV(u, v, [0,0,random.randint(0,1)])
-
-# 	# CA_young(image)
-
-# 	print("FINISHED")

@@ -1,3 +1,7 @@
+from . import operators
+from . import panels
+from . import properties
+
 print(
     f"""
 	__file__={__file__:<35}
@@ -5,10 +9,6 @@ print(
 	__package__={__package__!s:<20}
 	"""
 )
-
-from . import operators
-from . import panels
-from . import properties
 
 
 def register():

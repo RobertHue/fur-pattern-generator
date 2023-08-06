@@ -1,6 +1,6 @@
 import bpy
 
-from . import fur_pattern_generator as fpg
+from ..fpg import generator as fpg
 
 
 print(
@@ -14,22 +14,24 @@ print(
 # AND the UI can access, display and expose it to the user to change
 # #in here we will have all properties(variables) that is neccessary
 # class CustomPropertyGroup(bpy.types.PropertyGroup):
-# 	#NOTE: read documentation about 'props' to see them and their keyword arguments
-# 	#       https://docs.blender.org/api/current/bpy.props.html
-# 	float_slider: bpy.props.FloatProperty(name='float value', soft_min=0, soft_max=10)
+# 	#NOTE: read documentation about 'props' to see them and their keyword
+#          arguments
+# 	       https://docs.blender.org/api/current/bpy.props.html
+# 	float_slider: bpy.props.FloatProperty(name='float value', soft_min=0,
+#                 soft_max=10)
 
 
-class FPG_OT_ca_young(bpy.types.Operator):
+class FPG_OT_cellular_automata(bpy.types.Operator):
     """generates a fur pattern through CA Young"""
 
-    bl_idname = "fpg.ca_young"
+    bl_idname = "fpg.cellular_automata"
     bl_label = "CA Young"
-    bl_options = {"REGISTER", "UNDO"}
+    bl_options = {"REGISTER", "UNDO"}  # noqa: RUF012
 
     def execute(self, context):
         image = fpg.Image(context.edit_image.name)
         imageData = bpy.data.materials[0]
-        fpg.CA_young(
+        fpg.cellular_automata(
             image,
             imageData.my_settings.r_activator,
             imageData.my_settings.r_inhibitor,
@@ -88,7 +90,7 @@ class FPG_OT_generate_random(bpy.types.Operator):
 # 		return {'FINISHED'}
 
 
-classes = (FPG_OT_ca_young, FPG_OT_generate_random)
+classes = (FPG_OT_cellular_automata, FPG_OT_generate_random)
 
 
 def register():
