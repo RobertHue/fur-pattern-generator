@@ -19,9 +19,13 @@ class Cells:
     def __init__(self, image, discriminator_color):
         self.width = image.width()
         self.height = image.height()
-        self.disc = [[0.0 for i in range(self.width)] for j in range(self.height)]
+        self.disc = [
+            [0.0 for i in range(self.width)] for j in range(self.height)
+        ]
 
-        self.visited = [[0 for i in range(self.width)] for j in range(self.height)]
+        self.visited = [
+            [0 for i in range(self.width)] for j in range(self.height)
+        ]
 
         self.cells = [
             [
@@ -48,13 +52,12 @@ class Cells:
         self.visited[v][u] = 1
 
     def got_visited(self, u, v):
-        if self.visited[v][u] > 0:
-            return True
-        else:
-            return False
+        return self.visited[v][u] > 0
 
     def reset_visited(self):
-        self.visited = [[0 for i in range(self.width)] for j in range(self.height)]
+        self.visited = [
+            [0 for i in range(self.width)] for j in range(self.height)
+        ]
 
     def set(self, u, v, state):
         self.cells[v][u] = state
@@ -63,7 +66,9 @@ class Cells:
         return self.cells[v][u]
 
     def reset(self):
-        self.cells = [[0 for i in range(self.width)] for j in range(self.height)]
+        self.cells = [
+            [0 for i in range(self.width)] for j in range(self.height)
+        ]
 
     def print(self):
         print()
@@ -141,7 +146,12 @@ class Image:
         Returns 'True', if the supplied coordinates
         are in the Image. Otherwhise returns 'False'.
         """
-        if x >= 0 and x < self._img.size[0] and y >= 0 and y < self._img.size[1]:
+        if (
+            x >= 0
+            and x < self._img.size[0]
+            and y >= 0
+            and y < self._img.size[1]
+        ):
             return True
         return False
 
@@ -152,8 +162,7 @@ class Image:
         """
         if self.is_coord_valid(x, y):
             index = (y * self.width() + x) * 4
-            cell = self._img.pixels[index : index + 4]
-            return cell
+            return self._img.pixels[index : index + 4]
         return [0, 0, 0, 0]
 
     def get_pixel_hsv(self, x, y):
@@ -163,8 +172,7 @@ class Image:
         """
         if self.is_coord_valid(x, y):
             rgba = self.get_pixel_rgba(x, y)
-            hsv = colorsys.rgb_to_hsv(rgba[0], rgba[1], rgba[2])
-            return hsv
+            return colorsys.rgb_to_hsv(rgba[0], rgba[1], rgba[2])
         return [0, 0, 0, 0]
 
     def set_pixel_rgba(self, x, y, rgba):
@@ -213,13 +221,12 @@ def get_circular_neighborhood(image, source_pixel, radius):
     mask = np.zeros((image.height(), image.width(), 3), dtype=np.uint8)
 
     # define a circle as mask
-    x, y = [source_pixel[i] for i in (0, 1)]
+    x, y = (source_pixel[i] for i in (0, 1))
     center_coordinates = (x, y)
     color = (255, 255, 255)
     thickness = cv2.FILLED
     cv2.circle(mask, center_coordinates, radius, color, thickness)
-    result_n = np.argwhere(mask == (255, 255, 255))
-    return result_n
+    return np.argwhere(mask == (255, 255, 255))
 
 
 def get_moore_neighborhood(image, cells, source_pixel, radius):
@@ -239,7 +246,7 @@ def get_moore_neighborhood(image, cells, source_pixel, radius):
     cells.resetVisited()  # to memorize that the cell has been visited once
 
     # Are coords inside the image; hence valid?
-    x, y = [source_pixel[i] for i in (0, 1)]
+    x, y = (source_pixel[i] for i in (0, 1))
     if not image.isValidCoord(x, y):
         return result_n
 
@@ -329,7 +336,9 @@ def generate_random(image, rgb_color_d, rgb_color_u):
                 image.set_pixel_hsv(u, v, color_u)
 
 
-def cellular_automata(image, r_activator, r_inhibitor, w, rgb_color_d, rgb_color_u):
+def cellular_automata(
+    image, r_activator, r_inhibitor, w, rgb_color_d, rgb_color_u
+):
     """Cellular Automata (CA) by David Young
 
     Args:
@@ -361,7 +370,9 @@ def cellular_automata(image, r_activator, r_inhibitor, w, rgb_color_d, rgb_color
             # cells.printVisits()
 
             cells.reset_visited()
-            inhibitors = count_d_cells(image, cells, [u, v], r_inhibitor) - activators
+            inhibitors = (
+                count_d_cells(image, cells, [u, v], r_inhibitor) - activators
+            )
             # cells.printVisits()
 
             # This computation happens to all cells at the same time,

@@ -31,7 +31,9 @@ class PropertySettings(bpy.types.PropertyGroup):
 
 def register():
     bpy.utils.register_class(PropertySettings)
-    bpy.types.Material.my_settings = bpy.props.PointerProperty(type=PropertySettings)
+    bpy.types.Material.my_settings = bpy.props.PointerProperty(
+        type=PropertySettings
+    )
 
 
 def unregister():
