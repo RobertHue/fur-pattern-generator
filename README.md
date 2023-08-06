@@ -65,7 +65,7 @@ It is recommended to choose low resolution, because the algorithm is not yet opt
 
 After that you can generate a `Random Noise` or let the CA young pattern generator run by hitting `CA Young`:
 
-![example](example.png)
+![example](doc/example.png)
 
 ---
 
