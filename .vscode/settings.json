@@ -5,8 +5,10 @@
 	"files.insertFinalNewline": true,
 	"files.exclude": {
 		"**/__pycache__": true,
+		"**/.benchmarks": true,
 		"**/.git": true,
 		"**/.mypy_cache": true,
+		"**/.pytest_cache": true,
 		"**/.ruff_cache": true,
 		"**/.venv": true,
 	},
@@ -34,4 +36,9 @@
 		"editor.wordWrap": "wordWrapColumn",
 		"editor.insertSpaces": true
 	},
+	"python.testing.pytestArgs": [
+		"tests"
+	],
+	"python.testing.unittestEnabled": false,
+	"python.testing.pytestEnabled": true,
 }
