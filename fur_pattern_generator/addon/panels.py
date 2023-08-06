@@ -26,7 +26,8 @@ class FPG_PT_ui(bpy.types.Panel):
         # obj = context.object
 
         layout.label(
-            text="Active texture is:    " + context.edit_image.name, icon="IMAGE"
+            text="Active texture is:    " + context.edit_image.name,
+            icon="IMAGE",
         )
 
         # place a buttons into the layout to call operators

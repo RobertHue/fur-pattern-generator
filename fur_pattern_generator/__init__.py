@@ -23,13 +23,11 @@ bl_info = {
 }
 
 print(
-    """
-	__file__={0:<35}
-	__name__={1:<20}
-	__package__={2:<20}
-	""".format(
-        __file__, __name__, str(__package__)
-    )
+    f"""
+	__file__={__file__:<35}
+	__name__={__name__:<20}
+	__package__={__package__!s:<20}
+	"""
 )
 
 from . import addon

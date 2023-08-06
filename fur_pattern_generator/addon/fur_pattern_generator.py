@@ -70,7 +70,7 @@ class Cells:
         for row in self.cells[::-1]:
             print("[", end="")
             for val in row:
-                print("{:1}".format(val), end="")
+                print(f"{val:1}", end="")
             print("]")
         print()
 
@@ -81,7 +81,7 @@ class Cells:
             print("[", end="")
             for val in row:
                 if val >= 1:
-                    print("{:2}".format(val), end="")
+                    print(f"{val:2}", end="")
                 elif val == 0:
                     print("{:2}".format(" "), end="")
                 else:
