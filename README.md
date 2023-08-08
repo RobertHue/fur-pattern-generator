@@ -34,7 +34,7 @@ neighborhood cells:
 The repository is structured as follows:
 
 - `.vscode/`: workspace configuration for [VSCode]
-- `fur_pattern_generator/`: Python package containing the modules of the fur pattern generator blender plugin
+- `fpg/`: Python package containing the modules of the fur pattern generator
 - `tests/`: contains unit tests for this project (still TBD)
 - `poetry.lock`: lock file for [Poetry]
 - `pyproject.toml`: configuration file for [Poetry]
