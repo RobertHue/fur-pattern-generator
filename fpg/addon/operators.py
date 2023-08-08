@@ -1,5 +1,4 @@
 import bpy
-
 from fpg.generator import generator as fpg
 
 

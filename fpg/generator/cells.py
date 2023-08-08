@@ -1,11 +1,10 @@
-from .image import Image
-
 import numpy as np
 
 import cv2
 
 from .colors import HSV_COLOR_D
 from .colors import RGB_Color
+from .image import Image
 
 
 class Cells:
@@ -37,7 +36,7 @@ class Cells:
             for j in range(self._height)
         ]
 
-    def set_disc(self, u: int, v: int, disc) -> None:
+    def set_disc(self, u: int, v: int, disc: float) -> None:
         self._disc[v][u] = disc
 
     def get_disc(self, u: int, v: int) -> float:

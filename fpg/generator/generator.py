@@ -1,10 +1,12 @@
 # 3rd Party
 import numpy as np
 
-# own libraries
-from .colors import HSV_COLOR_D, HSV_COLOR_U
 from .cells import Cells
 from .cells import count_d_cells
+
+# own libraries
+from .colors import HSV_COLOR_D
+from .colors import HSV_COLOR_U
 
 
 def cellular_automata(

@@ -12,7 +12,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 from . import addon
-from .version import __version__  # noqa
+from .version import __version__
 
 
 bl_info = {
