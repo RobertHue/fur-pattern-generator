@@ -2,8 +2,8 @@
 # from typing import SupportsFloat
 
 import pytest
-from src.fpg.generator import COLOR
-from src.fpg.generator import rgb2hsv
+from fpg.fpg.generator import COLOR
+from fpg.fpg.generator import rgb2hsv
 
 
 ####################
