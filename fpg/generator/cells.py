@@ -5,6 +5,10 @@ import cv2
 from .colors import HSV_COLOR_D
 from .colors import RGB_Color
 from .image import Image
+from typing import Any
+from typing import NamedTuple
+from .colors import RGBA_COLOR_D
+from .colors import RGBA_COLOR_U
 
 
 class Cells:
@@ -12,144 +16,115 @@ class Cells:
     This class defines the cells of the Cellular Automata (CA).
     """
 
-    def __init__(self, image: Image) -> None:
-        self._width = image.width
-        self._height = image.height
-        self._img = image
-        self._disc = [
-            [0.0 for i in range(self._width)] for j in range(self._height)
-        ]
+    def __init__(self, img: Image) -> None:
+        # super().__init__(*args, **kwargs)
+        self._img = img
+        self._shape = (self._img.width, self._img.height)
+        self._disc = np.zeros(self._shape, dtype=np.float32)
+        self._visited = np.zeros(self._shape, dtype=np.bool_)
 
-        self._visited = [
-            [0 for i in range(self._width)] for j in range(self._height)
-        ]
-
-        self._cells = [
-            [
-                "D"
-                if image.get_pixel_hsv(i, j).h == HSV_COLOR_D.h
-                and image.get_pixel_hsv(i, j).s == HSV_COLOR_D.s
-                and image.get_pixel_hsv(i, j).v == HSV_COLOR_D.v
-                else "U"
-                for i in range(self._width)
-            ]
-            for j in range(self._height)
-        ]
-
-    def set_disc(self, x: int, y: int, disc: float) -> None:
-        self._disc[y][x] = disc
+    ############################################################################
 
     def get_disc(self, x: int, y: int) -> float:
-        return self._disc[y][x]
+        return self._disc[y, x]
 
-    def increase_visits(self, x: int, y: int) -> None:
-        self._visited[y][x] += 1
+    def set_disc(self, x: int, y: int, disc: float) -> None:
+        self._disc[y, x] = disc
+
+    ############################################################################
+
+    def get_visited(self, x: int, y: int) -> bool:
+        return self._visited[y, x]
 
     def set_visited(self, x: int, y: int) -> None:
-        self._visited[y][x] = 1
-
-    def got_visited(self, x: int, y: int) -> bool:
-        return self._visited[y][x] > 0
+        self._visited[y, x] = True
 
     def reset_visited(self) -> None:
-        self._visited = [
-            [0 for i in range(self._width)] for j in range(self._height)
-        ]
+        self._visited = np.zeros((*self._shape, 1), dtype=np.bool_)
 
-    def set_cell(self, x: int, y: int, state: True) -> None:
-        self._cells[y][x] = state
+    ############################################################################
 
-    def get_cell(self, x: int, y: int) -> list[list[any]]:
-        return self._cells[y][x]
+    # def print_cells(self) -> None:
+    #     print()
+    #     print("print: ")
+    #     for row in self._cells[::-1]:
+    #         print("[", end="")
+    #         for val in row:
+    #             print(f"{val:1}", end="")
+    #         print("]")
+    #     print()
 
-    def reset(self) -> None:
-        self._cells = [
-            [0 for i in range(self._width)] for j in range(self._height)
-        ]
+    # def print_visits(self) -> None:
+    #     print()
+    #     print("printVisits: ")
+    #     for row in self._visited[::-1]:
+    #         print("[", end="")
+    #         for val in row:
+    #             if val >= 1:
+    #                 print(f"{val:2}", end="")
+    #             elif val == 0:
+    #                 print("{:2}".format(" "), end="")
+    #             else:
+    #                 print("{:2}".format("E"), end="")
+    #         print("]")
+    #     print()
 
-    def print_cells(self) -> None:
-        print()
-        print("print: ")
-        for row in self._cells[::-1]:
-            print("[", end="")
-            for val in row:
-                print(f"{val:1}", end="")
-            print("]")
-        print()
-
-    def print_visits(self) -> None:
-        print()
-        print("printVisits: ")
-        for row in self._visited[::-1]:
-            print("[", end="")
-            for val in row:
-                if val >= 1:
-                    print(f"{val:2}", end="")
-                elif val == 0:
-                    print("{:2}".format(" "), end="")
-                else:
-                    print("{:2}".format("E"), end="")
-            print("]")
-        print()
-
-    def print_discs(self) -> None:
-        print()
-        print("print discriminators: ")
-        for row in self._disc[::-1]:
-            print("[", end="")
-            for d in row:
-                if d > 0:
-                    print("{:2}".format("+"), end="")
-                elif d < 0:
-                    print("{:2}".format("-"), end="")
-                else:
-                    print("{:2}".format(" "), end="")
-            print("]")
-        print()
+    # def print_discs(self) -> None:
+    #     print()
+    #     print("print discriminators: ")
+    #     for row in self._disc[::-1]:
+    #         print("[", end="")
+    #         for d in row:
+    #             if d > 0:
+    #                 print("{:2}".format("+"), end="")
+    #             elif d < 0:
+    #                 print("{:2}".format("-"), end="")
+    #             else:
+    #                 print("{:2}".format(" "), end="")
+    #         print("]")
+    #     print()
 
 
-def draw_circle(
-    image: type[Image], color: RGB_Color, x: int, y: int, radius: float
-) -> None:
-    """Draws a circle into image."""
-    Image.Image.getdata(image)
-    # Reading an image in default mode
-    cv_img = image.export_CV()
+# def draw_circle(
+#     image: type[Image], color: RGB_Color, x: int, y: int, radius: float
+# ) -> None:
+#     """Draws a circle into image."""
+#     Image.Image.getdata(image)
+#     # Reading an image in default mode
+#     cv_img = image.export_CV()
 
-    # draw a circle as mask
-    center_coordinates = (x, y)
-    thickness = 1
-    new_img = cv2.circle(cv_img, center_coordinates, radius, color, thickness)
+#     # draw a circle as mask
+#     center_coordinates = (x, y)
+#     thickness = 1
+#     new_img = cv2.circle(cv_img, center_coordinates, radius, color, thickness)
 
-    # write back image with circle into image
-    image.import_CV(new_img)
+#     # write back image with circle into image
+#     image.import_CV(new_img)
 
 
-def get_circular_neighborhood(
-    image: type[Image], source_pixel: list[int, int], radius: float
-) -> np.ndarray:
-    """Gets the Circular neighborhood as a list of pixels including the source
-    pixel."""
-    # create mask with zeros
-    mask = np.zeros((image.height(), image.width(), 3), dtype=np.uint8)
+# def get_circular_neighborhood(
+#     image: type[Image], source_pixel: list[int, int], radius: float
+# ) -> np.ndarray:
+#     """Gets the Circular neighborhood as a list of pixels including the source
+#     pixel."""
+#     # create mask with zeros
+#     mask = np.zeros((image.height(), image.width(), 3), dtype=np.uint8)
 
-    # define a circle as mask
-    x, y = (source_pixel[i] for i in (0, 1))
-    center_coordinates = (x, y)
-    color = (255, 255, 255)
-    thickness = cv2.FILLED
-    cv2.circle(mask, center_coordinates, radius, color, thickness)
-    return np.argwhere(mask == (255, 255, 255))
+#     # define a circle as mask
+#     x, y = (source_pixel[i] for i in (0, 1))
+#     center_coordinates = (x, y)
+#     color = (255, 255, 255)
+#     thickness = cv2.FILLED
+#     cv2.circle(mask, center_coordinates, radius, color, thickness)
+#     return np.argwhere(mask == (255, 255, 255))
 
 
 def get_moore_neighborhood(
-    image: type[Image],
     cells: Cells,
-    source_pixel: list[int, int],
+    pos: tuple[int, int],
     radius: float,
 ) -> np.ndarray:
-    """Gets the Moore neighborhood as a list of pixels including the source
-    pixel."""
+    """Gets the Moore neighborhood as a list of pixels around pos."""
     moore_lookup = [
         [1, 0],
         [-1, 0],
@@ -162,17 +137,17 @@ def get_moore_neighborhood(
     ]
     result_n = []  # the neighboorhood result
     queue = []  # create a queue for BFS
-    cells.resetVisited()  # to memorize that the cell has been visited once
+    cells.reset_visited()  # to memorize that the cell has been visited once
 
     # Are coords inside the image; hence valid?
-    x, y = (source_pixel[i] for i in (0, 1))
-    if not image.isValidCoord(x, y):
+    x, y = (pos[i] for i in (0, 1))
+    if not cells._img.check_coords(x, y):
         return result_n
 
     # Mark the source_pixel as visited and enqueue it
-    coords = source_pixel
+    coords = pos
     result_n = [coords]
-    cells.increaseVisits(x, y)
+    cells.set_visited(x, y)
     queue.append(coords)
 
     while radius >= 0 and queue:
@@ -196,33 +171,25 @@ def get_moore_neighborhood(
                 new_y = src_pixel[1] + lookup[1]
 
                 # Are valid coords inside the image:
-                if not image.isValidCoord(new_x, new_y):
+                if not cells._img.check_coords(new_x, new_y):
                     continue
 
                 # cell got already visited
-                if cells.gotVisited(new_x, new_y):
+                if cells.get_visited(new_x, new_y):
                     continue
 
                 coords = [new_x, new_y]
                 queue.append(coords)
-                cells.setVisited(new_x, new_y)
+                cells.set_visited(new_x, new_y)
         radius -= 1
     return result_n
 
 
-def count_d_cells(
-    image: type[Image], cells: Cells, pos: list[int, int], r: float
-) -> int:
-    """
-    Counts the D cells at position pos in a given radius r.
-    @param cells     empty cell-set that adds additional info to the image
-    @param x         x pos of the center
-    @param y         y pos of the center
-    @param radius    radius
-    """
+def count_d_cells(cells: Cells, pos: tuple[int, int], radius: float) -> int:
+    """Counts the D cells at position pos in a given radius."""
     cell_count = 0
 
-    region_list = get_moore_neighborhood(image, cells, pos, r)
+    region_list = get_moore_neighborhood(cells, pos, radius)
 
     for region in region_list:
         # update coords:
@@ -230,8 +197,10 @@ def count_d_cells(
         y = region[1]
 
         # get pixel
-        cell_info = cells.get_cell(x, y)
-        if cell_info == "D":
+        cell_color = cells._img.get_color(x, y)
+        print("cell col: ", cell_color)
+        print("RGBA_COLOR_D: ", RGBA_COLOR_D)
+        if RGB_Color(*cell_color) == RGBA_COLOR_D:
             cell_count += 1
 
     return cell_count

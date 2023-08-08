@@ -9,8 +9,16 @@ from .colors import RGBA_COLOR_D
 from .colors import RGBA_COLOR_U
 from .colors import RGB_Color
 
-img_dt = np.dtype([("pixel_color", np.int32, 4)])
 ImageType = npt.NDArray
+
+img_dt = np.dtype([("pixel_color", np.uint8, 4)])
+t2dt = np.dtype(RGB_Color)
+test_dt = np.dtype(
+    {
+        "names": ["r", "g", "b", "a"],
+        "formats": [np.uint8, np.uint8, np.uint8, np.uint8],
+    }
+)
 
 
 class Image:
@@ -38,9 +46,13 @@ class Image:
         ):
             raise ValueError("Either only pass img or only pass shape.")
         if ndarray is None:
-            self._img = np.zeros((*shape, 4), dtype=img_dt)
+            self._img = np.zeros(shape, dtype=t2dt)
         else:
             self._img = ndarray
+
+    # @property
+    # def img(self) -> ImageType:
+    #     return self._img
 
     @property
     def height(self) -> int:
@@ -57,6 +69,14 @@ class Image:
         y_inbound = y >= 0 and y < self.height
         if not (x_inbound and y_inbound):
             raise ValueError("The coordinates are not inside the image")
+
+    def check_coords(self, x: int, y: int) -> bool:
+        """Returns True if inside the image, otherwhise False."""
+        x_inbound = x >= 0 and x < self.width
+        y_inbound = y >= 0 and y < self.height
+        if not (x_inbound and y_inbound):
+            return False
+        return True
 
     ############################################################################
 
@@ -84,12 +104,21 @@ class Image:
         self,
         x: int,
         y: int,
-    ) -> RGB_Color:
+    ) -> img_dt:
         """Gets the pixel's color at 'x' 'y' as RGBA."""
-        return RGB_Color(*self._img[y, x])
+        # print("shape: ", self._img.shape)
+        # print("x: ", x)
+        # print("y: ", x)
+        # print("all: ", self._img)
+        # print("getter col: ", self._img[y, x])
+        # result = RGB_Color(*self._img[y, x])
+        # print("result: ", result)
+        return self._img[y, x]
 
-    def set_color(self, x: int, y: int, rgba: RGB_Color) -> None:
+    def set_color(self, x: int, y: int, rgba: img_dt) -> None:
         """Sets the pixel's color at 'x' 'y' with RGBA."""
+        print("set -----: ", self._img[y, x])
+        print("set rgba ", rgba)
         self._img[y, x] = rgba
 
     ############################################################################

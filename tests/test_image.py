@@ -151,6 +151,7 @@ def test_randomize() -> None:
     # Define the values for the array and create a 2D numpy array
     array_2d = np.array(values)
     img = Image(ndarray=array_2d)
+
     img.randomize_image()
     for y in range(img.height):
         for x in range(img.width):
