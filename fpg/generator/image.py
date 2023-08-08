@@ -5,12 +5,11 @@ import random
 import numpy as np
 import numpy.typing as npt
 
-from .colors import T_RGBA
 from .colors import RGBA_COLOR_D
 from .colors import RGBA_COLOR_U
 from .colors import RGB_Color
 
-img_dt = np.dtype([("pixel_color", np.float32, 4)])
+img_dt = np.dtype([("pixel_color", np.int32, 4)])
 ImageType = npt.NDArray
 
 
@@ -85,11 +84,11 @@ class Image:
         self,
         x: int,
         y: int,
-    ) -> type[RGB_Color]:
+    ) -> RGB_Color:
         """Gets the pixel's color at 'x' 'y' as RGBA."""
         return RGB_Color(*self._img[y, x])
 
-    def set_color(self, x: int, y: int, rgba: type[RGB_Color]) -> None:
+    def set_color(self, x: int, y: int, rgba: RGB_Color) -> None:
         """Sets the pixel's color at 'x' 'y' with RGBA."""
         self._img[y, x] = rgba
 

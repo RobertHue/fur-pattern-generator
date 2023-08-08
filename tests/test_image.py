@@ -12,10 +12,26 @@ from fpg.generator.colors import RGB_Color
 ####################
 
 values = [
-    [RGB_Color(1, 2, 3, 4), RGB_Color(1, 2, 3, 4), RGB_Color(1, 2, 3, 4)],
-    [RGB_Color(1, 2, 3, 4), RGB_Color(1, 2, 3, 4), RGB_Color(1, 2, 3, 4)],
-    [RGB_Color(1, 2, 3, 4), RGB_Color(1, 2, 3, 4), RGB_Color(1, 2, 3, 4)],
-    [RGB_Color(1, 2, 3, 4), RGB_Color(1, 2, 3, 4), RGB_Color(1, 2, 3, 4)],
+    [
+        RGB_Color(244, 222, 111, 55),
+        RGB_Color(244, 222, 111, 55),
+        RGB_Color(244, 222, 111, 55),
+    ],
+    [
+        RGB_Color(244, 222, 111, 55),
+        RGB_Color(244, 222, 111, 55),
+        RGB_Color(244, 222, 111, 55),
+    ],
+    [
+        RGB_Color(244, 222, 111, 55),
+        RGB_Color(244, 222, 111, 55),
+        RGB_Color(244, 222, 111, 55),
+    ],
+    [
+        RGB_Color(244, 222, 111, 55),
+        RGB_Color(244, 222, 111, 55),
+        RGB_Color(244, 222, 111, 55),
+    ],
 ]
 
 
@@ -90,14 +106,14 @@ def test_valid_coords(coords: list[int]) -> None:
 @pytest.mark.parametrize(
     ("x", "y", "expected"),
     (
-        (0, 0, RGB_Color(1, 2, 3, 4)),
-        (0, 1, RGB_Color(1, 2, 3, 4)),
-        (1, 2, RGB_Color(1, 2, 3, 4)),
-        (1, 3, RGB_Color(1, 2, 3, 4)),
-        (2, 3, RGB_Color(1, 2, 3, 4)),
+        (0, 0, RGB_Color(244, 222, 111, 55)),
+        (0, 1, RGB_Color(244, 222, 111, 55)),
+        (1, 2, RGB_Color(244, 222, 111, 55)),
+        (1, 3, RGB_Color(244, 222, 111, 55)),
+        (2, 3, RGB_Color(244, 222, 111, 55)),
     ),
 )
-def test_get_color(x: int, y: int, expected: type[RGB_Color]) -> None:
+def test_get_color(x: int, y: int, expected: RGB_Color) -> None:
     # Define the values for the array and create a 2D numpy array
     array_2d = np.array(values)
     img = Image(ndarray=array_2d)
@@ -112,14 +128,14 @@ def test_get_color(x: int, y: int, expected: type[RGB_Color]) -> None:
 @pytest.mark.parametrize(
     ("x", "y", "expected"),
     (
-        (0, 0, RGB_Color(1, 2, 3, 4)),
-        (0, 1, RGB_Color(1, 2, 3, 4)),
-        (1, 2, RGB_Color(1, 2, 3, 4)),
-        (1, 3, RGB_Color(1, 2, 3, 4)),
-        (2, 3, RGB_Color(1, 2, 3, 4)),
+        (0, 0, RGB_Color(244, 222, 111, 55)),
+        (0, 1, RGB_Color(244, 222, 111, 55)),
+        (1, 2, RGB_Color(244, 222, 111, 55)),
+        (1, 3, RGB_Color(244, 222, 111, 55)),
+        (2, 3, RGB_Color(244, 222, 111, 55)),
     ),
 )
-def test_set_color(x: int, y: int, expected: type[RGB_Color]) -> None:
+def test_set_color(x: int, y: int, expected: RGB_Color) -> None:
     # Define the values for the array and create a 2D numpy array
     array_2d = np.array(values)
     img = Image(ndarray=array_2d)
