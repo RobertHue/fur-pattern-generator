@@ -17,14 +17,14 @@
 	"editor.renderWhitespace": "trailing",
 	"editor.suggestSelection": "first",
 	"editor.bracketPairColorization.enabled": false,
-	"editor.insertSpaces": false,
+	"editor.insertSpaces": true,
 	"editor.rulers": [
 		80
 	],
 	// python
 	"[python]": {
 		"editor.formatOnSave": true,
-		"editor.defaultFormatter": "ms-python.black-formatter"
+		"editor.defaultFormatter": "ms-python.black-formatter",
 	},
 	"python.languageServer": "Pylance",
 	"python.analysis.autoFormatStrings": true,
@@ -34,7 +34,6 @@
 		"editor.formatOnSave": true,
 		"editor.defaultFormatter": "yzhang.markdown-all-in-one",
 		"editor.wordWrap": "wordWrapColumn",
-		"editor.insertSpaces": true
 	},
 	"python.testing.pytestArgs": [
 		"tests"
