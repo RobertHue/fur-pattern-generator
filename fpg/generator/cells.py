@@ -36,31 +36,31 @@ class Cells:
             for j in range(self._height)
         ]
 
-    def set_disc(self, u: int, v: int, disc: float) -> None:
-        self._disc[v][u] = disc
+    def set_disc(self, x: int, y: int, disc: float) -> None:
+        self._disc[y][x] = disc
 
-    def get_disc(self, u: int, v: int) -> float:
-        return self._disc[v][u]
+    def get_disc(self, x: int, y: int) -> float:
+        return self._disc[y][x]
 
-    def increase_visits(self, u: int, v: int) -> None:
-        self._visited[v][u] += 1
+    def increase_visits(self, x: int, y: int) -> None:
+        self._visited[y][x] += 1
 
-    def set_visited(self, u: int, v: int) -> None:
-        self._visited[v][u] = 1
+    def set_visited(self, x: int, y: int) -> None:
+        self._visited[y][x] = 1
 
-    def got_visited(self, u: int, v: int) -> bool:
-        return self._visited[v][u] > 0
+    def got_visited(self, x: int, y: int) -> bool:
+        return self._visited[y][x] > 0
 
     def reset_visited(self) -> None:
         self._visited = [
             [0 for i in range(self._width)] for j in range(self._height)
         ]
 
-    def set_cell(self, u: int, v: int, state: True) -> None:
-        self._cells[v][u] = state
+    def set_cell(self, x: int, y: int, state: True) -> None:
+        self._cells[y][x] = state
 
-    def get_cell(self, u: int, v: int) -> list[list[any]]:
-        return self._cells[v][u]
+    def get_cell(self, x: int, y: int) -> list[list[any]]:
+        return self._cells[y][x]
 
     def reset(self) -> None:
         self._cells = [
