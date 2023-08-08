@@ -1,6 +1,6 @@
 import bpy
 
-from ..fpg import generator as fpg
+from fpg.generator import generator as fpg
 
 
 print(
