@@ -8,32 +8,42 @@ from fpg.generator.cells import Cells
 from fpg.generator.image import Image
 from fpg.generator.colors import RGB_Color
 
+from fpg.generator.colors import HSV_COLOR_D
+from fpg.generator.colors import HSV_COLOR_U
+from fpg.generator.colors import NP_RGBA_DTYPE
+from PIL import Image as im
+
 ####################
 #       INIT       #
 ####################
 
-values = [
+
+# create a 2D numpy array with defined values
+array_2d = np.array(
     [
-        RGB_Color(244, 222, 111, 55),
-        RGB_Color(244, 222, 111, 55),
-        RGB_Color(244, 222, 111, 55),
+        [
+            (244, 222, 111, 55),
+            (244, 222, 111, 55),
+            (244, 222, 111, 55),
+        ],
+        [
+            (244, 222, 111, 55),
+            (244, 222, 111, 55),
+            (244, 222, 111, 55),
+        ],
+        [
+            (244, 222, 111, 55),
+            (244, 222, 111, 55),
+            (244, 222, 111, 55),
+        ],
+        [
+            (244, 222, 111, 55),
+            (244, 222, 111, 55),
+            (244, 222, 111, 55),
+        ],
     ],
-    [
-        RGB_Color(244, 222, 111, 55),
-        RGB_Color(244, 222, 111, 55),
-        RGB_Color(244, 222, 111, 55),
-    ],
-    [
-        RGB_Color(244, 222, 111, 55),
-        RGB_Color(244, 222, 111, 55),
-        RGB_Color(244, 222, 111, 55),
-    ],
-    [
-        RGB_Color(244, 222, 111, 55),
-        RGB_Color(244, 222, 111, 55),
-        RGB_Color(244, 222, 111, 55),
-    ],
-]
+    dtype=NP_RGBA_DTYPE,
+)
 
 
 # @pytest.mark.parametrize(
@@ -48,37 +58,7 @@ values = [
 # )
 def test_set_color() -> None:
     # Define the values for the array and create a 2D numpy array
-    img = Image(shape=(33, 33))
-    img.randomize_image()
-    # cells = Cells(img)
-
-    from fpg.generator import generator as ca
-
-    ca.cellular_automata(img, 5, 3, w=0.5)
-
-    from PIL import Image as im
-
-    print("type: ", type(img._img))
-    # Image.fromarray(array_2d.astype('uint8'))
-    print(img._img)
-    from fpg.generator.image import test_dt
-
-    data = im.fromarray(img._img, mode="RGBA")
-    data.save("gfg_dummy_pic.png")
-
-    assert True == True
-
-
-# [ [[( 11,  13,  15, 255) ( 11,  13,  15, 255) ( 11,  13,  15, 255)
-#    ( 11,  13,  15, 255)]
-#   [(255, 111, 222, 255) (255, 111, 222, 255) (255, 111, 222, 255)
-#    (255, 111, 222, 255)]
-#   [( 11,  13,  15, 255) ( 11,  13,  15, 255) ( 11,  13,  15, 255)
-#    ( 11,  13,  15, 255)]
-#   ...
-#   [(255, 111, 222, 255) (255, 111, 222, 255) (255, 111, 222, 255)
-#    (255, 111, 222, 255)]
-#   [( 11,  13,  15, 255) ( 11,  13,  15, 255) ( 11,  13,  15, 255)
-#    ( 11,  13,  15, 255)]
-#   [(255, 111, 222, 255) (255, 111, 222, 255) (255, 111, 222, 255)
-#    (255, 111, 222, 255)]]]
+    cells = Cells(res=(5, 5))
+    cells.randomize_image()
+    cells.update_disc()
+    assert False
