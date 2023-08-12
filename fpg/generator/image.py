@@ -44,13 +44,18 @@ class Image:
             raise ValueError("Either only pass img or only pass shape.")
         if ndarray is None:
             self._img = np.zeros(shape=(*res, 4), dtype=NP_RGBA_DTYPE)
+            print(
+                f"is {self._img.ndim=} with {self._img.shape=} with "
+                f"{self._img.dtype=}"
+            )
         else:
+            # ndarray = ndarray.astype(dtype=NP_RGBA_DTYPE)
             print(
                 f"is {ndarray.ndim=} with {ndarray.shape=} with {ndarray.dtype=}"
             )
-            if ndarray.ndim != 3:
+            if ndarray.ndim != 2:
                 raise ValueError(
-                    f"need 3-D input (X, Y, COLOR), but is {ndarray.ndim=}"
+                    f"need 2-D input (X, Y), but is {ndarray.ndim=}"
                     f" with {ndarray.shape=} with {ndarray.dtype=}"
                 )
             self._img = ndarray
@@ -134,17 +139,22 @@ class Image:
 
 def export_pil(image: Image, name: str, mode: str = "RGBA") -> None:
     """Exports to PIL"""
-    pil = im.fromarray(image.data, mode=mode)
+    pil = im.fromarray(image.data, mode)
     pil.save(name)
 
 
 def import_pil(name: str, mode: str = "RGBA") -> Image:
     """Factory. Imports from PIL"""
     with im.open(name) as img:
-        print(f"Image Details ddd: {img}")
-        np_img = np.array(img)  # np_img.shape: height x width x channel
+        # print(f"Image Details ddd: {img}")
+        # test = [(i) for i in np_img for j in i]
+        print("x: ", type(img))
+        print("y: ", img)
+        np_img = np.array(img, dtype=NP_RGBA_DTYPE)
+        print("v: ", np_img)
         # np_img = np.asarray(img, dtype=NP_RGBA_DTYPE)
+        # np_img = np_img[:, :, 0]  # numpy's slice notation
         print(f"Image Details: {img.format=} - {img.size=} - {img.mode=}")
         print(f"Converted Numpy: {np_img.shape=} - {type(np_img)}")
-        print(np_img)
+        # print(np_img)
     return Image(np_img)
