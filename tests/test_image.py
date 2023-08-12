@@ -18,29 +18,29 @@ from fpg.generator.colors import NP_RGBA_DTYPE
 
 values = [
     [
-        [244, 222, 111, 55],
-        [244, 222, 111, 55],
-        [244, 222, 111, 55],
+        (244, 222, 111, 255),
+        (244, 222, 111, 255),
+        (244, 222, 111, 255),
     ],
     [
-        [244, 222, 111, 55],
-        [244, 222, 111, 55],
-        [244, 222, 111, 55],
+        (244, 222, 111, 255),
+        (244, 222, 111, 255),
+        (244, 222, 111, 255),
     ],
     [
-        [244, 222, 111, 55],
-        [244, 222, 111, 55],
-        [244, 222, 111, 55],
+        (244, 222, 111, 255),
+        (244, 222, 111, 255),
+        (244, 222, 111, 255),
     ],
     [
-        [244, 222, 111, 55],
-        [244, 222, 111, 55],
-        [244, 222, 111, 55],
+        (244, 222, 111, 255),
+        (244, 222, 111, 255),
+        (244, 222, 111, 255),
     ],
     [
-        [244, 222, 111, 55],
-        [244, 222, 111, 55],
-        [244, 222, 111, 55],
+        (244, 222, 111, 255),
+        (244, 222, 111, 255),
+        (244, 222, 111, 255),
     ],
 ]
 
@@ -118,11 +118,11 @@ def test_valid_coords(coords: list[int]) -> None:
 @pytest.mark.parametrize(
     ("x", "y", "expected"),
     (
-        (0, 0, [244, 222, 111, 55]),
-        (0, 1, [244, 222, 111, 55]),
-        (1, 2, [244, 222, 111, 55]),
-        (1, 3, [244, 222, 111, 55]),
-        (2, 3, [244, 222, 111, 55]),
+        (0, 0, (244, 222, 111, 255)),
+        (0, 1, (244, 222, 111, 255)),
+        (1, 2, (244, 222, 111, 255)),
+        (1, 3, (244, 222, 111, 255)),
+        (2, 3, (244, 222, 111, 255)),
     ),
 )
 def test_get_color(x: int, y: int, expected: RGB_Color) -> None:
@@ -138,11 +138,11 @@ def test_get_color(x: int, y: int, expected: RGB_Color) -> None:
 @pytest.mark.parametrize(
     ("x", "y", "expected"),
     (
-        (0, 0, [244, 222, 111, 55]),
-        (0, 1, [244, 222, 111, 55]),
-        (1, 2, [244, 222, 111, 55]),
-        (1, 3, [244, 222, 111, 55]),
-        (2, 3, [244, 222, 111, 55]),
+        (0, 0, (244, 222, 111, 255)),
+        (0, 1, (244, 222, 111, 255)),
+        (1, 2, (244, 222, 111, 255)),
+        (1, 3, (244, 222, 111, 255)),
+        (2, 3, (244, 222, 111, 255)),
     ),
 )
 def test_set_color(x: int, y: int, expected: RGB_Color) -> None:
@@ -183,9 +183,9 @@ def test_randomize() -> None:
 
 def test_import_export_pil() -> None:
     # Define the values for the array and create a 2D numpy array
-    image_name = "test_image.png"
-    img1 = Image(res=(5, 5))
-    img1.randomize_image()
+    image_name = "tests/intermediate/test_image.png"
+    img1 = Image(ndarray=array_2d)
+    # img1.randomize_image()
     print(repr(img1))
 
     export_pil(img1, image_name)
@@ -193,3 +193,6 @@ def test_import_export_pil() -> None:
     print(repr(img2))
 
     # assert (img1.data == img2.data).all()
+    for e, x in zip(img1.data, img2.data):
+        print(f"\n{e=} \n\n {x=}\n")
+        assert (e == x).all()

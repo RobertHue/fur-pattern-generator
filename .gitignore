@@ -19,6 +19,7 @@ ressources/
 data/*.h5
 venv/
 .venv/
+tests/intermediate/
 
 ################################
 ########### PYTHON #############
