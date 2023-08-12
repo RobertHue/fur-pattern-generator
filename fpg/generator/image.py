@@ -5,20 +5,17 @@ import random
 import numpy as np
 import numpy.typing as npt
 
+from PIL import Image as im
+
 from .colors import RGBA_COLOR_D
 from .colors import RGBA_COLOR_U
-from .colors import RGB_Color
+from .colors import NP_RGBA_COLOR_D
+from .colors import NP_RGBA_COLOR_U
+from .colors import NP_RGBA_DTYPE
+from .colors import dt
+from pprint import pprint
 
-ImageType = npt.NDArray
-
-img_dt = np.dtype([("pixel_color", np.uint8, 4)])
-t2dt = np.dtype(RGB_Color)
-test_dt = np.dtype(
-    {
-        "names": ["r", "g", "b", "a"],
-        "formats": [np.uint8, np.uint8, np.uint8, np.uint8],
-    }
-)
+NumpyType = npt.NDArray
 
 
 class Image:
@@ -31,28 +28,36 @@ class Image:
 
     def __init__(
         self,
-        ndarray: ImageType | None = None,
-        shape: tuple[int, int] | None = None,
+        ndarray: NumpyType | None = None,
+        res: tuple[int, int] | None = None,
     ) -> None:
         """Construct a new 0-initalized img (defined by shape)
         or one from given np-array.
 
         Args:
-            ndarray (np.ndarray | None): the image as array
-            shape (tuple | None): tuple consisting of (width, height)
+            ndarray (NumpyType | None): the image as array
+            res (tuple | None): the resolution of the image (width, height)
         """
-        if (ndarray is None and shape is None) or (
-            ndarray is not None and shape is not None
+        if (ndarray is None and res is None) or (
+            ndarray is not None and res is not None
         ):
             raise ValueError("Either only pass img or only pass shape.")
         if ndarray is None:
-            self._img = np.zeros(shape, dtype=t2dt)
+            self._img = np.zeros(shape=(*res, 4), dtype=NP_RGBA_DTYPE)
         else:
+            print(
+                f"is {ndarray.ndim=} with {ndarray.shape=} with {ndarray.dtype=}"
+            )
+            if ndarray.ndim != 3:
+                raise ValueError(
+                    f"need 3-D input (X, Y, COLOR), but is {ndarray.ndim=}"
+                    f" with {ndarray.shape=} with {ndarray.dtype=}"
+                )
             self._img = ndarray
 
-    # @property
-    # def img(self) -> ImageType:
-    #     return self._img
+    @property
+    def data(self) -> NumpyType:
+        return self._img
 
     @property
     def height(self) -> int:
@@ -61,6 +66,8 @@ class Image:
     @property
     def width(self) -> int:
         return self._img.shape[1]
+
+    ############################################################################
 
     def validate_coords(self, x: int, y: int) -> None:
         """Raises an ValueError if the if the supplied coordinates are not
@@ -80,57 +87,64 @@ class Image:
 
     ############################################################################
 
-    # def export_cv(self) -> None:
-    #     """Exports to CV"""
-    #     pixel_list = list(self._img.pixels)
-    #     rgb_pixels = [x for i, x in enumerate(pixel_list) if (i + 1) % 4 != 0]
-    #     a = np.array(rgb_pixels)
-    #     b = np.reshape(a, (self.height, self.width, 3))
-    #     rgba = np.ones((self.height, self.width, 3), dtype=np.float32)
-    #     rgba[:, :, :] = np.uint8(b) * 255
-    #     cv_image = np.flip(rgba, axis=[0, 2])
-    #     return np.float32(cv_image)
+    def __str__(self) -> str:
+        """str for user output"""
+        result = ""
+        for index, val in np.ndenumerate(self._img):
+            print(f"{index[0]}, {index[1]}, {val}")
+        return result
 
-    # def import_cv(self, cv_image: type[cv.cv]) -> None:
-    #     """Imports from CV"""
-    #     rgb = np.flip(cv_image, axis=[0, 2])
-    #     rgba = np.ones((self.height, self.width, 4), dtype=np.float32)
-    #     rgba[:, :, :-1] = np.float32(rgb) / 255
-    #     self._img.pixels = rgba.flatten()
+    def __repr__(self) -> str:
+        """Repr for Debug (Fallback for str)"""
+        result = f"""Image Details:
+        {self._img.size=}
+        {self._img.shape=}
+        {self._img.ndim=}
+        Content:
+        """
+        result += str(self)
+        return repr(result)
 
     ############################################################################
 
-    def get_color(
-        self,
-        x: int,
-        y: int,
-    ) -> img_dt:
+    def get_color(self, x: int, y: int) -> NP_RGBA_DTYPE:
         """Gets the pixel's color at 'x' 'y' as RGBA."""
-        # print("shape: ", self._img.shape)
-        # print("x: ", x)
-        # print("y: ", x)
-        # print("all: ", self._img)
-        # print("getter col: ", self._img[y, x])
-        # result = RGB_Color(*self._img[y, x])
-        # print("result: ", result)
         return self._img[y, x]
 
-    def set_color(self, x: int, y: int, rgba: img_dt) -> None:
+    def set_color(self, x: int, y: int, rgba: NP_RGBA_DTYPE) -> None:
         """Sets the pixel's color at 'x' 'y' with RGBA."""
-        print("set -----: ", self._img[y, x])
-        print("set rgba ", rgba)
         self._img[y, x] = rgba
 
     ############################################################################
 
     def randomize_image(self) -> None:
         """Randomizes the image with U & D pixels."""
-        color_d = RGBA_COLOR_D
-        color_u = RGBA_COLOR_U
         for y in range(self.height):
             for x in range(self.width):
                 random_bool = random.choice([True, False])
                 if random_bool is True:
-                    self.set_color(x, y, color_d)
+                    self.set_color(x, y, NP_RGBA_COLOR_D)
                 else:
-                    self.set_color(x, y, color_u)
+                    self.set_color(x, y, NP_RGBA_COLOR_U)
+
+
+################################################################################
+# EX-/IM-PORTERS
+
+
+def export_pil(image: Image, name: str, mode: str = "RGBA") -> None:
+    """Exports to PIL"""
+    pil = im.fromarray(image.data, mode=mode)
+    pil.save(name)
+
+
+def import_pil(name: str, mode: str = "RGBA") -> Image:
+    """Factory. Imports from PIL"""
+    with im.open(name) as img:
+        print(f"Image Details ddd: {img}")
+        np_img = np.array(img)  # np_img.shape: height x width x channel
+        # np_img = np.asarray(img, dtype=NP_RGBA_DTYPE)
+        print(f"Image Details: {img.format=} - {img.size=} - {img.mode=}")
+        print(f"Converted Numpy: {np_img.shape=} - {type(np_img)}")
+        print(np_img)
+    return Image(np_img)
