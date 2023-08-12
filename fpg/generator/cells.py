@@ -10,18 +10,22 @@ from typing import NamedTuple
 from .colors import RGBA_COLOR_D
 from .colors import RGBA_COLOR_U
 
+from numpy.lib.stride_tricks import as_strided
 
-class Cells:
+
+class Cells(Image):
     """
     This class defines the cells of the Cellular Automata (CA).
     """
 
-    def __init__(self, img: Image) -> None:
-        # super().__init__(*args, **kwargs)
-        self._img = img
-        self._shape = (self._img.width, self._img.height)
-        self._disc = np.zeros(self._shape, dtype=np.float32)
-        self._visited = np.zeros(self._shape, dtype=np.bool_)
+    def __init__(self, *args: str, **kwargs: int) -> None:
+        super().__init__(*args, **kwargs)
+        self._disc = np.zeros(self._img.shape, dtype=np.float32)
+        self._visited = np.zeros(self._img.shape, dtype=np.bool_)
+
+    def update_disc(self):
+        # for loop can be optimized (by using numpy functs or Cython or something else)
+        update_all_cells(self, 3)
 
     ############################################################################
 
@@ -83,6 +87,78 @@ class Cells:
     #                 print("{:2}".format(" "), end="")
     #         print("]")
     #     print()
+
+
+def update_all_cells(cells: Cells, radius: float) -> int:
+    """Counts the D cells at position pos in a given radius."""
+    cell_count = 0
+
+    # region_list = get_moore_neighborhood(cells, pos, radius)
+    for i in range(cells.width):
+        for j in range(cells.height):
+            region_list = cell_neighbors(cells, i, j, distance=radius)
+            print("region_list: ", region_list)
+            print("t region_list: ", type(region_list))
+
+            for region in region_list:
+                # update coords:
+                x = region[0]
+                y = region[1]
+
+                # get pixel
+                cell_color = cells._img.get_color(x, y)
+                print("cell col: ", cell_color)
+                print("RGBA_COLOR_D: ", RGBA_COLOR_D)
+                if cell_color == RGBA_COLOR_D:
+                    cell_count += 1
+
+    return cell_count
+
+
+def sliding_window(arr, window_size):
+    """Construct a sliding window view of the array"""
+    print(arr)
+    print(type(arr))
+    arr = np.asarray(arr)
+    print(arr)
+    print(type(arr))
+    window_size = int(window_size)
+    if arr.ndim != 2:
+        raise ValueError("need 2-D input")
+    if not (window_size > 0):
+        raise ValueError("need a positive window size")
+    shape = (
+        arr.shape[0] - window_size + 1,
+        arr.shape[1] - window_size + 1,
+        window_size,
+        window_size,
+    )
+    if shape[0] <= 0:
+        shape = (1, shape[1], arr.shape[0], shape[3])
+    if shape[1] <= 0:
+        shape = (shape[0], 1, shape[2], arr.shape[1])
+    strides = (
+        arr.shape[1] * arr.itemsize,
+        arr.itemsize,
+        arr.shape[1] * arr.itemsize,
+        arr.itemsize,
+    )
+    return as_strided(arr, shape=shape, strides=strides)
+
+
+def cell_neighbors(arr, i, j, distance):
+    """Return d-th neighbors of cell (i, j)"""
+    w = sliding_window(arr, 2 * distance + 1)
+
+    ix = np.clip(i - distance, 0, w.shape[0] - 1)
+    jx = np.clip(j - distance, 0, w.shape[1] - 1)
+
+    i0 = max(0, i - distance - ix)
+    j0 = max(0, j - distance - jx)
+    i1 = w.shape[2] - max(0, distance - i + ix)
+    j1 = w.shape[3] - max(0, distance - j + jx)
+
+    return w[ix, jx][i0:i1, j0:j1].ravel()
 
 
 # def draw_circle(
@@ -200,7 +276,7 @@ def count_d_cells(cells: Cells, pos: tuple[int, int], radius: float) -> int:
         cell_color = cells._img.get_color(x, y)
         print("cell col: ", cell_color)
         print("RGBA_COLOR_D: ", RGBA_COLOR_D)
-        if RGB_Color(*cell_color) == RGBA_COLOR_D:
+        if cell_color == RGBA_COLOR_D:
             cell_count += 1
 
     return cell_count
