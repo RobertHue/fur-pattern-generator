@@ -43,7 +43,7 @@ class Image:
         ):
             raise ValueError("Either only pass img or only pass shape.")
         if ndarray is None:
-            self._img = np.zeros(shape=(*res, 1), dtype=NP_RGBA_DTYPE)
+            self._img = np.zeros(shape=(*res,), dtype=NP_RGBA_DTYPE)
             print(
                 f"is {self._img.ndim=} with {self._img.shape=} with "
                 f"{self._img.dtype=}"
@@ -111,6 +111,9 @@ class Image:
 
     def get_color(self, x: int, y: int) -> NP_RGBA_DTYPE:
         """Gets the pixel's color at 'x' 'y' as RGBA."""
+        print("dddd: ", self._img)
+        print("dddd: ", x)
+        print("dddd: ", y)
         return self._img[y, x]
 
     def set_color(self, x: int, y: int, rgba: NP_RGBA_DTYPE) -> None:
