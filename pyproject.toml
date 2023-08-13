@@ -14,7 +14,7 @@ version = "0.2.0"
 description = ""
 authors = ["RobertHue <robert.huem@gmail.com>"]
 readme = "README.md"
-packages = [{include = "src"}]
+packages = [{include = "fpg"}]
 
 [tool.poetry.dependencies]
 python = ">=3.10"
@@ -46,8 +46,8 @@ testpaths = "tests"
 branch = true
 parallel = true
 omit = [
-    "src/__init__.py",
-    "src/version.py",
+    "fpg/__init__.py",
+    "fpg/version.py",
 ]
 
 [tool.coverage.report]
@@ -64,7 +64,7 @@ exclude_lines = [
 
 [tool.coverage.paths]
 source = [
-    "src/*",
+    "fpg/*",
 ]
 
 [tool.coverage.html]
