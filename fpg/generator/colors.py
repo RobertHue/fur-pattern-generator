@@ -47,17 +47,12 @@ T_RGB = tuple[int, int, int]
 T_RGBA = tuple[int, int, int, int]
 
 # Constants
-# RGBA_COLOR_D2 = np.array([((255, 0, 0, 255))], dtype=RGBA_TYPE)
-# print("RGBA_COLOR_D2: ", RGBA_COLOR_D2)
-# print("t RGBA_COLOR_D2: ", type(RGBA_COLOR_D2))
 RGBA_COLOR_D = RGB_Color(r=255, g=0, b=0, a=255)  # BLACK
 RGBA_COLOR_U = RGB_Color(r=0, g=0, b=255, a=255)  # WHITE
 
 NP_RGBA_COLOR_D = np.array([((255, 0, 0, 255))], dtype=NP_RGBA_DTYPE)  # BLACK
 NP_RGBA_COLOR_U = np.array([((0, 0, 255, 255))], dtype=NP_RGBA_DTYPE)  # WHITE
 
-print("RGBA_COLOR_D: ", RGBA_COLOR_D)
-print("t RGBA_COLOR_D: ", type(RGBA_COLOR_D))
 RGBA_COLOR_ND = [int(value / 255) for value in RGBA_COLOR_D]  # N = normalized
 RGBA_COLOR_NU = [int(value / 255) for value in RGBA_COLOR_U]  # N = normalized
 color_tuple_d = (*rgb_to_hsv(*RGBA_COLOR_ND[:3]), RGBA_COLOR_ND[3])

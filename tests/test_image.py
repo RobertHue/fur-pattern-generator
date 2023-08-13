@@ -181,18 +181,29 @@ def test_randomize() -> None:
             assert origin_item[3] == rand_item[3]
 
 
-def test_import_export_pil() -> None:
+def test_import_export_pil1() -> None:
     # Define the values for the array and create a 2D numpy array
-    image_name = "tests/intermediate/test_image.png"
-    img1 = Image(ndarray=array_2d)
-    # img1.randomize_image()
-    print(repr(img1))
+    image_name = "tests/intermediate/test_image1.png"
+    img1 = Image(res=(512, 512))
+    img1.randomize_image()
 
     export_pil(img1, image_name)
     img2 = import_pil(image_name)
-    print(repr(img2))
 
     # assert (img1.data == img2.data).all()
     for e, x in zip(img1.data, img2.data):
-        print(f"\n{e=} \n\n {x=}\n")
-        assert (e == x).all()
+        assert e[0] == x[0]
+        assert e[1] == x[1]
+        assert e[2] == x[2]
+        assert e[3] == x[3]
+
+
+def test_import_export_pil2() -> None:
+    image_name = "tests/intermediate/test_image2.png"
+    img1 = Image(ndarray=array_2d)
+    img1.randomize_image()
+
+    export_pil(img1, image_name)
+    img2 = import_pil(image_name)
+
+    assert (img1.data == img2.data).all()

@@ -43,22 +43,23 @@ class Image:
         ):
             raise ValueError("Either only pass img or only pass shape.")
         if ndarray is None:
-            self._img = np.zeros(shape=(*res, 4), dtype=NP_RGBA_DTYPE)
+            self._img = np.zeros(shape=(*res, 1), dtype=NP_RGBA_DTYPE)
             print(
                 f"is {self._img.ndim=} with {self._img.shape=} with "
                 f"{self._img.dtype=}"
             )
         else:
-            # ndarray = ndarray.astype(dtype=NP_RGBA_DTYPE)
-            print(
-                f"is {ndarray.ndim=} with {ndarray.shape=} with {ndarray.dtype=}"
-            )
             if ndarray.ndim != 2:
                 raise ValueError(
                     f"need 2-D input (X, Y), but is {ndarray.ndim=}"
                     f" with {ndarray.shape=} with {ndarray.dtype=}"
                 )
+            # ndarray = ndarray.astype(dtype=NP_RGBA_DTYPE).squeeze()
             self._img = ndarray
+            print(
+                f"is {self._img.ndim=} with {self._img.shape=} with "
+                f"{self._img.dtype=}"
+            )
 
     @property
     def data(self) -> NumpyType:
@@ -101,12 +102,8 @@ class Image:
 
     def __repr__(self) -> str:
         """Repr for Debug (Fallback for str)"""
-        result = f"""Image Details:
-        {self._img.size=}
-        {self._img.shape=}
-        {self._img.ndim=}
-        Content:
-        """
+        result = f"Image Details: {self._img.size=} {self._img.shape=} "
+        f"{self._img.ndim=} Content: "
         result += str(self)
         return repr(result)
 
@@ -148,13 +145,14 @@ def import_pil(name: str, mode: str = "RGBA") -> Image:
     with im.open(name) as img:
         # print(f"Image Details ddd: {img}")
         # test = [(i) for i in np_img for j in i]
-        print("x: ", type(img))
-        print("y: ", img)
-        np_img = np.array(img, dtype=NP_RGBA_DTYPE)
-        print("v: ", np_img)
+        # print("x: ", type(img))
+        # print("y: ", img)
+        np_img = np.array(img)
+        np_img = np_img.view(dtype=NP_RGBA_DTYPE).squeeze()
+        # print("v: ", np_img)
         # np_img = np.asarray(img, dtype=NP_RGBA_DTYPE)
         # np_img = np_img[:, :, 0]  # numpy's slice notation
-        print(f"Image Details: {img.format=} - {img.size=} - {img.mode=}")
-        print(f"Converted Numpy: {np_img.shape=} - {type(np_img)}")
+        # print(f"Image Details: {img.format=} - {img.size=} - {img.mode=}")
+        # print(f"Converted Numpy: {np_img.shape=} - {type(np_img)}")
         # print(np_img)
     return Image(np_img)
