@@ -1,7 +1,7 @@
 from .cells import get_moore_neighborhood
-from .generator import Cells
-from .generator import cellular_automata
-from .generator import count_d_cells
+from .cells import Cells
+from .cells import cellular_automata
+from .cells import count_d_cells
 from .image import Image
 
 
