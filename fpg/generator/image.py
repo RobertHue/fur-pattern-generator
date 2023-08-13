@@ -7,13 +7,9 @@ import numpy.typing as npt
 
 from PIL import Image as im
 
-from .colors import RGBA_COLOR_D
-from .colors import RGBA_COLOR_U
 from .colors import NP_RGBA_COLOR_D
 from .colors import NP_RGBA_COLOR_U
 from .colors import NP_RGBA_DTYPE
-from .colors import dt
-from pprint import pprint
 
 NumpyType = npt.NDArray
 
@@ -111,9 +107,6 @@ class Image:
 
     def get_color(self, x: int, y: int) -> NP_RGBA_DTYPE:
         """Gets the pixel's color at 'x' 'y' as RGBA."""
-        print("dddd: ", self._img)
-        print("dddd: ", x)
-        print("dddd: ", y)
         return self._img[y, x]
 
     def set_color(self, x: int, y: int, rgba: NP_RGBA_DTYPE) -> None:
@@ -146,16 +139,6 @@ def export_pil(image: Image, name: str, mode: str = "RGBA") -> None:
 def import_pil(name: str, mode: str = "RGBA") -> Image:
     """Factory. Imports from PIL"""
     with im.open(name) as img:
-        # print(f"Image Details ddd: {img}")
-        # test = [(i) for i in np_img for j in i]
-        # print("x: ", type(img))
-        # print("y: ", img)
         np_img = np.array(img)
         np_img = np_img.view(dtype=NP_RGBA_DTYPE).squeeze()
-        # print("v: ", np_img)
-        # np_img = np.asarray(img, dtype=NP_RGBA_DTYPE)
-        # np_img = np_img[:, :, 0]  # numpy's slice notation
-        # print(f"Image Details: {img.format=} - {img.size=} - {img.mode=}")
-        # print(f"Converted Numpy: {np_img.shape=} - {type(np_img)}")
-        # print(np_img)
     return Image(np_img)

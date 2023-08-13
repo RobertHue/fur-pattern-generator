@@ -33,9 +33,6 @@ class Cells(Image):
         return self._disc[y, x]
 
     def set_disc(self, x: int, y: int, disc: float) -> None:
-        print(f"{y=}")
-        print(f"{x=}")
-        # print(f"{self._disc=}")
         self._disc[y, x] = disc
 
     ############################################################################
@@ -101,8 +98,6 @@ def update_all_cells(cells: Cells, radius: float) -> int:
         for j in range(cells.height):
             # region_list = cell_neighbors(cells.data, i, j, distance=radius)
             region_list = get_moore_neighborhood(cells, (i, j), radius=radius)
-            print("region_list: ", region_list)
-            print("t region_list: ", type(region_list))
 
             for region in region_list:
                 # update coords:
@@ -111,8 +106,6 @@ def update_all_cells(cells: Cells, radius: float) -> int:
 
                 # get pixel
                 cell_color = cells.get_color(x, y)
-                print("cell col: ", cell_color)
-                print("RGBA_COLOR_D: ", RGBA_COLOR_D)
                 is_equal = (
                     cell_color[0] == RGBA_COLOR_D.r
                     and cell_color[1] == RGBA_COLOR_D.g
@@ -127,14 +120,8 @@ def update_all_cells(cells: Cells, radius: float) -> int:
 
 def sliding_window(arr, window_size):
     """Construct a sliding window view of the array"""
-    print(arr)
-    print(type(arr))
     arr = np.asarray(arr)
-    print(arr)
-    print(type(arr))
     window_size = int(window_size)
-    print(arr)
-    print(type(arr))
     if arr.ndim != 2:
         raise ValueError("need 2-D input")
     if not (window_size > 0):
@@ -286,8 +273,6 @@ def count_d_cells(cells: Cells, pos: tuple[int, int], radius: float) -> int:
 
         # get pixel
         cell_color = cells.get_color(x, y)
-        print("cell col: ", cell_color)
-        print("RGBA_COLOR_D: ", RGBA_COLOR_D)
         is_equal = (
             cell_color[0] == RGBA_COLOR_D.r
             and cell_color[1] == RGBA_COLOR_D.g
@@ -314,29 +299,23 @@ def cellular_automata(
     # we need to know the image dimensions
     width = cells.width
     height = cells.height
-    print("Image size: ", width, " x ", height)
-    print("w: ", w)
 
     # 1st pass : calculate cells Disc and apply cells-set
-    print("1st pass start")
+    print("1st pass start - calculate cells Disc and apply cells-set")
     for u in range(height):
         for v in range(width):
             cells.reset_visited()
             activators = count_d_cells(cells, [u, v], r_activator)
-            # cells.printVisits()
 
             cells.reset_visited()
             inhibitors = count_d_cells(cells, [u, v], r_inhibitor) - activators
-            # cells.printVisits()
 
             # This computation happens to all cells at the same time,
             # therefore we must defer the setting of the color to a 2nd step.
             disc = activators - w * inhibitors
             cells.set_disc(v, u, disc)
-    # cells.print_discs()
-    # cells.print_cells()
-    print("2nd pass start")
     # 2nd pass : apply cells to image:
+    print("2nd pass start - apply cells to image")
     for u in range(height):
         for v in range(width):
             d = cells.get_disc(u, v)
@@ -346,6 +325,4 @@ def cellular_automata(
             elif d < 0:
                 # cells.set_cell(u, v, "U")
                 cells.set_color(u, v, RGBA_COLOR_U)
-    # cells.print_discs()
-    # cells.print_cells()
     print("finished")

@@ -52,7 +52,7 @@ array_2d = np.array(
 # )
 def test_set_color() -> None:
     # Define the values for the array and create a 2D numpy array
-    cells = Cells(res=(16, 16))
+    cells = Cells(res=(512, 512))
     # cells = Cells(ndarray=array_2d)
     cells.randomize_image()
     cells.update_disc()
@@ -62,3 +62,4 @@ def test_set_color() -> None:
     image_name = "tests/intermediate/test_cells1.png"
     export_pil(cells, image_name)
     # img2 = import_pil(image_name)
+    # assert False

@@ -127,7 +127,6 @@ def test_valid_coords(coords: list[int]) -> None:
 )
 def test_get_color(x: int, y: int, expected: RGB_Color) -> None:
     img = Image(ndarray=array_2d)
-    print("img: ", img)
     rgba_col = img.get_color(x, y)
     assert rgba_col[0] == expected[0]
     assert rgba_col[1] == expected[1]
@@ -148,18 +147,8 @@ def test_get_color(x: int, y: int, expected: RGB_Color) -> None:
 def test_set_color(x: int, y: int, expected: RGB_Color) -> None:
     # Define the values for the array and create a 2D numpy array
     img = Image(ndarray=array_2d)
-    print("img: \n", img)
     img.set_color(x, y, expected)
     rgba_col = img.get_color(x, y)
-    print("t array_2d: ", type(array_2d))
-    print("t array_2d: ", array_2d[0, 0])
-    print("t: ", img.data.dtype)
-    print("rgba_col: ", rgba_col)
-    print("t rgba_col: ", type(rgba_col))
-    print("t rgba_col: ", type(rgba_col[0]))
-    print("expected: ", expected)
-    print("t expected: ", type(expected))
-    print("t expected: ", type(expected[0]))
     assert rgba_col[0] == expected[0]
     assert rgba_col[1] == expected[1]
     assert rgba_col[2] == expected[2]
