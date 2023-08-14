@@ -40,22 +40,17 @@ class Image:
             raise ValueError("Either only pass img or only pass shape.")
         if ndarray is None:
             self._img = np.zeros(shape=(*res,), dtype=NP_RGBA_DTYPE)
-            print(
-                f"is {self._img.ndim=} with {self._img.shape=} with "
-                f"{self._img.dtype=}"
-            )
         else:
-            if ndarray.ndim != 2:
+            if ndarray.dtype != NP_RGBA_DTYPE:
                 raise ValueError(
-                    f"need 2-D input (X, Y), but is {ndarray.ndim=}"
+                    f"need of custom type NP_RGBA_DTYPE, but is {ndarray.ndim=}"
                     f" with {ndarray.shape=} with {ndarray.dtype=}"
                 )
-            # ndarray = ndarray.astype(dtype=NP_RGBA_DTYPE).squeeze()
             self._img = ndarray
-            print(
-                f"is {self._img.ndim=} with {self._img.shape=} with "
-                f"{self._img.dtype=}"
-            )
+        print(
+            f"\nis {self._img.ndim=} with {self._img.shape=} with "
+            f"{self._img.dtype=}"
+        )
 
     @property
     def data(self) -> NumpyType:
@@ -140,5 +135,5 @@ def import_pil(name: str, mode: str = "RGBA") -> Image:
     """Factory. Imports from PIL"""
     with im.open(name) as img:
         np_img = np.array(img)
-        np_img = np_img.view(dtype=NP_RGBA_DTYPE).squeeze()
+        np_img = np.rec.fromarrays(np_img.T, dtype=NP_RGBA_DTYPE).T
     return Image(np_img)
