@@ -9,8 +9,11 @@ from typing import Any
 from typing import NamedTuple
 from .colors import RGBA_COLOR_D
 from .colors import RGBA_COLOR_U
+import numpy.typing as npt
 
 from numpy.lib.stride_tricks import as_strided
+
+NumpyType = npt.NDArray
 
 
 class Cells(Image):
@@ -26,6 +29,14 @@ class Cells(Image):
     def update_disc(self):
         # for loop can be optimized (by using numpy functs or Cython or something else)
         update_all_cells(self, 3)
+
+    @property
+    def discs(self) -> NumpyType:
+        return self._disc
+
+    @property
+    def visited(self) -> NumpyType:
+        return self._visited
 
     ############################################################################
 
@@ -48,45 +59,45 @@ class Cells(Image):
 
     ############################################################################
 
-    # def print_cells(self) -> None:
-    #     print()
-    #     print("print: ")
-    #     for row in self._cells[::-1]:
-    #         print("[", end="")
-    #         for val in row:
-    #             print(f"{val:1}", end="")
-    #         print("]")
-    #     print()
+    def print_cells(self) -> None:
+        print()
+        print("print: ")
+        for row in self._img[::-1]:
+            print("[", end="")
+            for val in row:
+                print(f"{val:1}", end="")
+            print("]")
+        print()
 
-    # def print_visits(self) -> None:
-    #     print()
-    #     print("printVisits: ")
-    #     for row in self._visited[::-1]:
-    #         print("[", end="")
-    #         for val in row:
-    #             if val >= 1:
-    #                 print(f"{val:2}", end="")
-    #             elif val == 0:
-    #                 print("{:2}".format(" "), end="")
-    #             else:
-    #                 print("{:2}".format("E"), end="")
-    #         print("]")
-    #     print()
+    def print_visits(self) -> None:
+        print()
+        print("printVisits: ")
+        for row in self._visited[::-1]:
+            print("[", end="")
+            for val in row:
+                if val >= 1:
+                    print(f"{val:2}", end="")
+                elif val == 0:
+                    print("{:2}".format(" "), end="")
+                else:
+                    print("{:2}".format("E"), end="")
+            print("]")
+        print()
 
-    # def print_discs(self) -> None:
-    #     print()
-    #     print("print discriminators: ")
-    #     for row in self._disc[::-1]:
-    #         print("[", end="")
-    #         for d in row:
-    #             if d > 0:
-    #                 print("{:2}".format("+"), end="")
-    #             elif d < 0:
-    #                 print("{:2}".format("-"), end="")
-    #             else:
-    #                 print("{:2}".format(" "), end="")
-    #         print("]")
-    #     print()
+    def print_discs(self) -> None:
+        print()
+        print("print discriminators: ")
+        for row in self._disc[::-1]:
+            print("[", end="")
+            for d in row:
+                if d > 0:
+                    print("{:2}".format("+"), end="")
+                elif d < 0:
+                    print("{:2}".format("-"), end="")
+                else:
+                    print("{:2}".format(" "), end="")
+            print("]")
+        print()
 
 
 def update_all_cells(cells: Cells, radius: float) -> int:
