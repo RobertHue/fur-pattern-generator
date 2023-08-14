@@ -139,7 +139,13 @@ def export_pil(image: Image, name: str, mode: str = "RGBA") -> None:
 
 def import_pil(name: str, mode: str = "RGBA") -> Image:
     """Factory. Imports from PIL"""
-    with im.open(name) as img:
+    with im.open(name).convert(mode) as img:
+        img.convert(mode=mode)
         np_img = np.array(img)
+        # print("np_img: ", np_img)
+        # print("np_img shape: ", np_img.shape)
+        # print("np_img size: ", np_img.size)
+        # print("img mode: ", img.mode)
+        # print("img format: ", img.format)
         np_img = np.rec.fromarrays(np_img.T, dtype=NP_RGBA_DTYPE).T
     return Image(np_img)

@@ -115,11 +115,11 @@ moore_3_2_r1 = [
         (array_2d, (3, 2), 1, moore_3_2_r1),
     ),
 )
-def test_get_moore_neighborhood(
+def test_get_neighborhood(
     ndarray: NP_RGBA_DTYPE, pos: tuple[int, int], distance: int, expected: int
 ) -> None:
     cells = Cells(ndarray=ndarray)
-    result = cells.get_moore_neighborhood(pos, distance)
+    result = cells.get_neighborhood(pos, distance)
     print("pos: ", pos)
     print("distance: ", distance)
     print("result: ", result)
@@ -140,17 +140,21 @@ def test_get_moore_neighborhood(
 # )
 # def test_set_color() -> None:
 #     # Define the values for the array and create a 2D numpy array
-#     cells = Cells(res=(15, 15))
-#     # cells = Cells(ndarray=array_2d)
+#     # cells = Cells(res=(50, 50))
+#     # # cells = Cells(ndarray=array_2d)
+#     # cells.randomize_image()
+#     img = import_pil("tests/intermediate/test_cells1.png")
+#     cells = Cells(img.data)
 
-#     cells.randomize_image()
-#     cells.update_disc()
-#     export_pil(cells, "tests/intermediate/test_cells1.png")
+#     cells.print_discs()
+#     cells.print_cells()
 
-#     cells.develop(cells, 6, 3, 0.6)
-#     print(cells)
+#     cells.develop(6, 3, w=0.10)
+
+#     cells.print_discs()
+#     cells.print_cells()
 
 #     # for debug:
-#     export_pil(cells, "tests/intermediate/test_cells3.png")
+#     export_pil(cells, "tests/intermediate/test_cells2.png")
 #     # img2 = import_pil(image_name)
 #     assert False
