@@ -7,7 +7,7 @@ from PIL import Image as im
 from .colors import RGBA_COLOR_D
 from .colors import RGBA_COLOR_U
 from .image import Image
-
+import math
 
 NumpyType = npt.NDArray
 
@@ -113,9 +113,9 @@ class Cells(Image):
                 # This computation happens to all cells at the same time,
                 # therefore we must defer the setting of the color to a 2nd step.
                 disc = AD - w * ID
-                print("activators: ", AD)
-                print("inhibitors: ", ID)
-                print("disc: ", disc)
+                # print("activators: ", AD)
+                # print("inhibitors: ", ID)
+                # print("disc: ", disc)
                 self.set_disc(*pos, disc)
 
     ############################################################################
@@ -191,9 +191,15 @@ class Cells(Image):
     def count_d_cells(self, pos: tuple[int, int], distance: int) -> int:
         """Counts the D cells at position pos in a given radius."""
         cell_count = 0
-        region = self.get_neighborhood(pos, distance)
+        # TODO - implement strategy or selector for the different neighborhood methods
+        # region = self.get_neighborhood(pos, distance)
+        region = get_circular_neighborhood(self, pos, distance)
+        # print("region: ", type(region))
+        # print("region: ", region)
 
         for pos in region:
+            print("pos: ", type(pos))
+            print("pos: ", pos)
             cell_color = self.get_color(*pos)
             is_equal = (
                 cell_color[0] == RGBA_COLOR_D.r
@@ -223,18 +229,18 @@ class Cells(Image):
 #     image.import_CV(new_img)
 
 
-# def get_circular_neighborhood(
-#     image: type[Image], source_pixel: list[int, int], radius: float
-# ) -> np.ndarray:
-#     """Gets the Circular neighborhood as a list of pixels including the source
-#     pixel."""
-#     # create mask with zeros
-#     mask = np.zeros((image.height(), image.width(), 3), dtype=np.uint8)
-
-#     # define a circle as mask
-#     x, y = (source_pixel[i] for i in (0, 1))
-#     center_coordinates = (x, y)
-#     color = (255, 255, 255)
-#     thickness = cv2.FILLED
-#     cv2.circle(mask, center_coordinates, radius, color, thickness)
-#     return np.argwhere(mask == (255, 255, 255))
+def get_circular_neighborhood(
+    image: Image, center: list[int, int], radius: float
+) -> np.ndarray:
+    """Gets the Circular neighborhood as a list of pixels including the source
+    pixel."""
+    print("center: ", center)
+    print("radius: ", radius)
+    center_x, center_y = center
+    return [
+        (x, y)
+        for x in range(center_x - radius, center_x + radius + 1)
+        for y in range(center_y - radius, center_y + radius + 1)
+        if math.sqrt((x - center_x) ** 2 + (y - center_y) ** 2) <= radius
+        and image.check_coords(x, y)
+    ]

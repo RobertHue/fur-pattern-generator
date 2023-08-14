@@ -138,23 +138,25 @@ def test_get_neighborhood(
 #         (2, 3, RGB_Color(244, 222, 111, 55)),
 #     ),
 # )
-# def test_set_color() -> None:
-#     # Define the values for the array and create a 2D numpy array
-#     # cells = Cells(res=(50, 50))
-#     # # cells = Cells(ndarray=array_2d)
-#     # cells.randomize_image()
-#     img = import_pil("tests/intermediate/test_cells1.png")
-#     cells = Cells(img.data)
+def test_set_color() -> None:
+    # Define the values for the array and create a 2D numpy array
+    cells = Cells(res=(15, 15))
+    # # cells = Cells(ndarray=array_2d)
+    # cells.randomize_image()
 
-#     cells.print_discs()
-#     cells.print_cells()
+    # img = import_pil("tests/intermediate/test_cells1.png")
+    # cells = Cells(img.data)
+    cells.randomize_image()
 
-#     cells.develop(6, 3, w=0.10)
+    cells.print_discs()
+    cells.print_cells()
 
-#     cells.print_discs()
-#     cells.print_cells()
+    cells.develop(4, 2, w=0.1)
 
-#     # for debug:
-#     export_pil(cells, "tests/intermediate/test_cells2.png")
-#     # img2 = import_pil(image_name)
-#     assert False
+    cells.print_discs()
+    cells.print_cells()
+
+    # for debug:
+    export_pil(cells, "tests/intermediate/test_cells2.png")
+    # img2 = import_pil(image_name)
+    assert False
