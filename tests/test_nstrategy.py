@@ -83,12 +83,12 @@ moore_3_2_r1 = [
 @pytest.mark.parametrize(
     ("ndarray", "pos", "distance", "expected"),
     (
-        # (array_2d, (0, 0), 0, moore_0_0_r0),
-        # (array_2d, (0, 0), 1, moore_0_0_r1),
-        # (array_2d, (0, 0), 2, moore_0_0_r2),
+        (array_2d, (0, 0), 0, moore_0_0_r0),
+        (array_2d, (0, 0), 1, moore_0_0_r1),
+        (array_2d, (0, 0), 2, moore_0_0_r2),
         #####
-        # (array_2d, (3, 2), 0, moore_3_2_r0),
-        (array_2d, (3, 2), 3, moore_3_2_r1),
+        (array_2d, (3, 2), 0, moore_3_2_r0),
+        (array_2d, (3, 2), 1, moore_3_2_r1),
     ),
 )
 def test_get_neighborhood(
