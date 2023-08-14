@@ -1,6 +1,6 @@
 import bpy
-import fpg.generator as fpg
-
+from fpg.generator import Cells
+import numpy as np
 
 print(
     "__file__={:<35} | __name__={:<20} | __package__={:<20}".format(
@@ -28,16 +28,26 @@ class FPG_OT_cellular_automata(bpy.types.Operator):
     bl_options = {"REGISTER", "UNDO"}  # noqa: RUF012
 
     def execute(self, context):
-        image = fpg.Image(context.edit_image.name)
-        imageData = bpy.data.materials[0]
-        fpg.cellular_automata(
-            image,
-            imageData.my_settings.r_activator,
-            imageData.my_settings.r_inhibitor,
-            imageData.my_settings.w,
-            imageData.my_settings.color_D,
-            imageData.my_settings.color_U,
-        )
+        material = bpy.data.materials[0]
+
+        # Initialize an empty list to store texture data
+        texture_data = []
+
+        # Iterate through all the material's texture slots
+        for texture_slot in material.texture_slots:
+            if texture_slot and texture_slot.texture.type == "IMAGE":
+                # Get the image texture
+                image_texture = texture_slot.texture.image
+
+                # Convert image data to numpy array
+                texture_array = np.array(image_texture.pixels[:])
+                texture_data.append(texture_array)
+        print("texture_data: ", texture_data)
+        cells = Cells(texture_data)
+        RA = material.my_settings.r_activator
+        RI = material.my_settings.r_inhibitor
+        w = material.my_settings.w
+        cells.develop(RA, RI, w)
         return {"FINISHED"}
 
 
@@ -48,29 +58,33 @@ class FPG_OT_generate_random(bpy.types.Operator):
     bl_label = "Random Noise"
 
     def execute(self, context):
-        image = fpg.Image(context.edit_image.name)
-        imageData = bpy.data.materials[0]
+        material = bpy.data.materials[0]
+        print("image data: ", material)
+        cells = Cells(material)
+        cells.randomize_image()
         print(
             "imageData.my_settings.color_D: ",
-            imageData.my_settings.color_D[0],
+            material.my_settings.color_D[0],
             ", ",
-            imageData.my_settings.color_D[1],
+            material.my_settings.color_D[1],
             ", ",
-            imageData.my_settings.color_D[2],
+            material.my_settings.color_D[2],
             ", ",
         )
         print(
             "imageData.my_settings.color_U: ",
-            imageData.my_settings.color_U[0],
+            material.my_settings.color_U[0],
             ", ",
-            imageData.my_settings.color_U[1],
+            material.my_settings.color_U[1],
             ", ",
-            imageData.my_settings.color_U[2],
+            material.my_settings.color_U[2],
             ", ",
         )
-        fpg.generate_random(
-            image, imageData.my_settings.color_D, imageData.my_settings.color_U
-        )
+        # fpg.generate_random(
+        #     image,
+        #     material.my_settings.color_D,
+        #     material.my_settings.color_U,
+        # )
         return {"FINISHED"}
 
 

@@ -42,7 +42,7 @@ class Image:
         if ndarray is None:
             self._img = np.zeros(shape=(*res,), dtype=NP_RGBA_DTYPE)
         else:
-            if ndarray.dtype != NP_RGBA_DTYPE:
+            if ndarray is not NumpyType and ndarray.dtype != NP_RGBA_DTYPE:
                 raise ValueError(
                     f"need of custom type NP_RGBA_DTYPE, but is {ndarray.ndim=}"
                     f" with {ndarray.shape=} with {ndarray.dtype=}"
