@@ -49,8 +49,8 @@ T_RGBA = tuple[int, int, int, int]
 RGBA_COLOR_D = RGB_Color(r=255, g=0, b=0, a=255)  # BLACK
 RGBA_COLOR_U = RGB_Color(r=0, g=0, b=255, a=255)  # WHITE
 
-NP_RGBA_COLOR_D = np.array([((255, 0, 0, 255))], dtype=NP_RGBA_DTYPE)  # BLACK
-NP_RGBA_COLOR_U = np.array([((0, 0, 255, 255))], dtype=NP_RGBA_DTYPE)  # WHITE
+NP_RGBA_COLOR_D = np.array([(255, 0, 0, 255)], dtype=NP_RGBA_DTYPE)  # BLACK
+NP_RGBA_COLOR_U = np.array([(0, 0, 255, 255)], dtype=NP_RGBA_DTYPE)  # WHITE
 
 RGBA_COLOR_ND = [int(value / 255) for value in RGBA_COLOR_D]  # N = normalized
 RGBA_COLOR_NU = [int(value / 255) for value in RGBA_COLOR_U]  # N = normalized

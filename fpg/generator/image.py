@@ -47,6 +47,11 @@ class Image:
                     f"need of custom type NP_RGBA_DTYPE, but is {ndarray.ndim=}"
                     f" with {ndarray.shape=} with {ndarray.dtype=}"
                 )
+            if ndarray.ndim != 2:
+                raise ValueError(
+                    f"need 2-D input (X, Y), but is {ndarray.ndim=}"
+                    f" with {ndarray.shape=} with {ndarray.dtype=}"
+                )
             self._img = ndarray
         print(
             f"\nis {self._img.ndim=} with {self._img.shape=} with "

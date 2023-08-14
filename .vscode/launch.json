@@ -18,6 +18,15 @@
             "console": "integratedTerminal",
             "args": [],
             "justMyCode": true
+        },
+        {
+            "name": "PyTest: Current File",
+            "type": "python",
+            "request": "launch",
+            "stopOnEntry": false,
+            "module": "pytest",
+            "args": ["tests/"],
+            "cwd": "${workspaceRoot}",
         }
     ]
 }

@@ -24,7 +24,7 @@ class Cells(Image):
 
     def update_disc(self):
         # for loop can be optimized (by using numpy functs or Cython or something else)
-        update_all_cells(self, 3)
+        self.update_all_cells(self, 3)
 
     @property
     def discs(self) -> NumpyType:
@@ -35,7 +35,6 @@ class Cells(Image):
         return self._visited
 
     def __str__(self):
-        self.print_cells()
         self.print_discs()
         self.print_visits()
 
@@ -97,29 +96,29 @@ class Cells(Image):
         """
         # 1st pass : calculate cells Disc and apply cells-set
         print("1st pass start - calculate cells Disc and apply cells-set")
-        for u in range(self.height):
-            for v in range(self.width):
+        for y in range(self.height):
+            for x in range(self.width):
                 self.reset_visited()
-                activators = self.count_d_cells([u, v], r_activator)
+                activators = self.count_d_cells([x, y], r_activator)
 
                 self.reset_visited()
                 inhibitors = (
-                    self.count_d_cells([u, v], r_inhibitor) - activators
+                    self.count_d_cells([x, y], r_inhibitor) - activators
                 )
 
                 # This computation happens to all cells at the same time,
                 # therefore we must defer the setting of the color to a 2nd step.
                 disc = activators - w * inhibitors
-                self.set_disc(v, u, disc)
+                self.set_disc(x, y, disc)
         # 2nd pass : apply cells to image:
         print("2nd pass start - apply cells to image")
-        for u in range(self.height):
-            for v in range(self.width):
-                d = self.get_disc(u, v)
+        for y in range(self.height):
+            for x in range(self.width):
+                d = self.get_disc(x, y)
                 if d > 0:
-                    self.set_color(u, v, RGBA_COLOR_D)
+                    self.set_color(x, y, RGBA_COLOR_D)
                 elif d < 0:
-                    self.set_color(u, v, RGBA_COLOR_U)
+                    self.set_color(x, y, RGBA_COLOR_U)
         print("finished")
 
     def update_all_cells(self, radius: float) -> int:
@@ -157,9 +156,13 @@ class Cells(Image):
     def get_moore_neighborhood(
         self,
         pos: tuple[int, int],
-        radius: float,
+        distance: int,
     ) -> np.ndarray:
-        """Gets the Moore neighborhood as a list of pixels around pos."""
+        """Gets the Moore neighborhood as a list of pixels around pos.
+
+        Note:
+            Also see https://mathworld.wolfram.com/CellularAutomaton.html
+        """
         moore_lookup = [
             [1, 0],
             [-1, 0],
@@ -168,26 +171,23 @@ class Cells(Image):
             [1, 1],
             [-1, -1],
             [1, -1],
-            [1, -1],
+            [-1, 1],
         ]
         result_n = []  # the neighboorhood result
         queue = []  # create a queue for BFS
         self.reset_visited()  # to memorize that the cell has been visited once
 
-        # Are coords inside the image; hence valid?
-        x, y = (pos[i] for i in (0, 1))
-        if not self.check_coords(x, y):
+        if not self.check_coords(*pos):
             return result_n
 
         # Mark the source_pixel as visited and enqueue it
-        coords = pos
-        result_n = [coords]
-        self.set_visited(x, y)
-        queue.append(coords)
+        queue.append(pos)
+        self.set_visited(*pos)
 
-        while radius >= 0 and queue:
+        while distance >= 0:
+            distance -= 1
+
             level_size = len(queue)
-
             while level_size > 0:
                 level_size -= 1
 
@@ -195,28 +195,24 @@ class Cells(Image):
                 src_pixel = queue.pop(0)
                 result_n += [src_pixel]
 
-                if not queue:
-                    radius -= 1
-
                 # get all adjacent pixels of that dequeued src_pixel
                 # if a adjacent has not been visited, then mark it visited and
                 # enqueue it
                 for lookup in moore_lookup:
                     new_x = src_pixel[0] + lookup[0]
                     new_y = src_pixel[1] + lookup[1]
+                    new_pos = (new_x, new_y)
 
                     # Are valid coords inside the image:
-                    if not self.check_coords(new_x, new_y):
+                    if not self.check_coords(*new_pos):
                         continue
 
                     # cell got already visited
-                    if self.get_visited(new_x, new_y):
+                    if self.get_visited(*new_pos):
                         continue
 
-                    coords = [new_x, new_y]
-                    queue.append(coords)
-                    self.set_visited(new_x, new_y)
-            radius -= 1
+                    queue.append(new_pos)
+                    self.set_visited(*new_pos)
         return result_n
 
     def count_d_cells(self, pos: tuple[int, int], radius: float) -> int:
