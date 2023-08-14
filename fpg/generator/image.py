@@ -70,6 +70,10 @@ class Image:
     def width(self) -> int:
         return self._img.shape[1]
 
+    @property
+    def shape(self) -> tuple[int, int]:
+        return self._img.shape
+
     ############################################################################
 
     def validate_coords(self, x: int, y: int) -> None:

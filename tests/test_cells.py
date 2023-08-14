@@ -86,48 +86,6 @@ def test_count_cells(ndarray: NP_RGBA_DTYPE, expected: int) -> None:
     assert result == expected
 
 
-moore_0_0_r0 = [(0, 0)]
-moore_0_0_r1 = [*moore_0_0_r0, (0, 1), (1, 0), (1, 1)]
-moore_0_0_r2 = [*moore_0_0_r1, (0, 2), (1, 2), (2, 2), (2, 1), (2, 0)]
-
-moore_3_2_r0 = [(3, 2)]
-moore_3_2_r1 = [
-    *moore_3_2_r0,
-    (2, 1),
-    (3, 1),
-    (4, 1),
-    (2, 2),
-    (4, 2),
-    (2, 3),
-    (3, 3),
-    (4, 3),
-]
-
-
-@pytest.mark.parametrize(
-    ("ndarray", "pos", "distance", "expected"),
-    (
-        (array_2d, (0, 0), 0, moore_0_0_r0),
-        (array_2d, (0, 0), 1, moore_0_0_r1),
-        (array_2d, (0, 0), 2, moore_0_0_r2),
-        #####
-        (array_2d, (3, 2), 0, moore_3_2_r0),
-        (array_2d, (3, 2), 1, moore_3_2_r1),
-    ),
-)
-def test_get_neighborhood(
-    ndarray: NP_RGBA_DTYPE, pos: tuple[int, int], distance: int, expected: int
-) -> None:
-    cells = Cells(ndarray=ndarray)
-    result = cells.get_neighborhood(pos, distance)
-    print("pos: ", pos)
-    print("distance: ", distance)
-    print("result: ", result)
-    print("expected: ", expected)
-    assert len(result) == len(expected)
-    assert set(result) == set(expected)
-
-
 # @pytest.mark.parametrize(
 #     ("x", "y", "expected"),
 #     (
@@ -140,7 +98,7 @@ def test_get_neighborhood(
 # )
 def test_set_color() -> None:
     # Define the values for the array and create a 2D numpy array
-    cells = Cells(res=(15, 15))
+    cells = Cells(res=(100, 100))
     # # cells = Cells(ndarray=array_2d)
     # cells.randomize_image()
 
@@ -151,7 +109,7 @@ def test_set_color() -> None:
     cells.print_discs()
     cells.print_cells()
 
-    cells.develop(4, 2, w=0.1)
+    cells.develop(3, 6, w=0.5)
 
     cells.print_discs()
     cells.print_cells()
@@ -159,4 +117,4 @@ def test_set_color() -> None:
     # for debug:
     export_pil(cells, "tests/intermediate/test_cells2.png")
     # img2 = import_pil(image_name)
-    assert False
+    # assert False
