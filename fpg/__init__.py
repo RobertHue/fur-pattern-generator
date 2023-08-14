@@ -11,6 +11,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+import site
+
+site.addsitedir(
+    ".venv/lib/python3.10/site-packages"
+)  # adds the packages of the virtual environment (here: poetry)
+
+import numpy as np
+
+print(f"version of numpy: {np.__version__}")  # just a little test
+
+
 from . import addon
 from .version import __version__
 
