@@ -11,6 +11,7 @@ from .colors import NP_RGBA_COLOR_D
 from .colors import NP_RGBA_COLOR_U
 from .colors import NP_RGBA_DTYPE
 
+
 NumpyType = npt.NDArray
 
 

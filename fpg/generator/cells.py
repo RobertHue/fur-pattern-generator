@@ -1,17 +1,13 @@
 import numpy as np
+import numpy.typing as npt
+from numpy.lib.stride_tricks import as_strided
 
-import cv2
+from PIL import Image as im
 
-from .colors import HSV_COLOR_D
-from .colors import RGB_Color
-from .image import Image
-from typing import Any
-from typing import NamedTuple
 from .colors import RGBA_COLOR_D
 from .colors import RGBA_COLOR_U
-import numpy.typing as npt
+from .image import Image
 
-from numpy.lib.stride_tricks import as_strided
 
 NumpyType = npt.NDArray
 
@@ -24,7 +20,7 @@ class Cells(Image):
     def __init__(self, *args: str, **kwargs: int) -> None:
         super().__init__(*args, **kwargs)
         self._disc = np.zeros(self._img.shape, dtype=np.float32)
-        self._visited = np.zeros(self._img.shape, dtype=np.bool_)
+        self._visited = np.zeros(self._img.shape, dtype=np.uint8)
 
     def update_disc(self):
         # for loop can be optimized (by using numpy functs or Cython or something else)
@@ -37,6 +33,11 @@ class Cells(Image):
     @property
     def visited(self) -> NumpyType:
         return self._visited
+
+    def __str__(self):
+        self.print_cells()
+        self.print_discs()
+        self.print_visits()
 
     ############################################################################
 
@@ -55,78 +56,192 @@ class Cells(Image):
         self._visited[y, x] = True
 
     def reset_visited(self) -> None:
-        self._visited = np.zeros((*self._img.shape, 1), dtype=np.bool_)
+        self._visited = np.zeros(self._img.shape, dtype=np.uint8)
 
     ############################################################################
 
     def print_cells(self) -> None:
-        print()
-        print("print: ")
-        for row in self._img[::-1]:
-            print("[", end="")
-            for val in row:
-                print(f"{val:1}", end="")
-            print("]")
-        print()
+        pil = im.fromarray(self.data, mode="RGBA")
+        pil.show()
 
     def print_visits(self) -> None:
-        print()
-        print("printVisits: ")
-        for row in self._visited[::-1]:
-            print("[", end="")
-            for val in row:
-                if val >= 1:
-                    print(f"{val:2}", end="")
-                elif val == 0:
-                    print("{:2}".format(" "), end="")
-                else:
-                    print("{:2}".format("E"), end="")
-            print("]")
-        print()
+        print("visited:\n", self._visited)
 
     def print_discs(self) -> None:
         print()
         print("print discriminators: ")
-        for row in self._disc[::-1]:
+        for row in self._disc:
             print("[", end="")
             for d in row:
                 if d > 0:
-                    print("{:2}".format("+"), end="")
+                    print(" +", end="")
                 elif d < 0:
-                    print("{:2}".format("-"), end="")
+                    print(" -", end="")
                 else:
-                    print("{:2}".format(" "), end="")
+                    print("  ", end="")
             print("]")
         print()
 
+    ############################################################################
 
-def update_all_cells(cells: Cells, radius: float) -> int:
-    """Counts the D cells at position pos in a given radius."""
-    cell_count = 0
+    def develop(self, r_activator: int, r_inhibitor: int, w: float) -> None:
+        """Develop the next generation of Cells.
 
-    # region_list = get_moore_neighborhood(cells, pos, radius)
-    for i in range(cells.width):
-        for j in range(cells.height):
-            # region_list = cell_neighbors(cells.data, i, j, distance=radius)
-            region_list = get_moore_neighborhood(cells, (i, j), radius=radius)
+        Note:
+            Is done by using the Cellular Automata (CA) by David Young.
 
-            for region in region_list:
-                # update coords:
-                x = region[0]
-                y = region[1]
+        Args:
+            r_activator (int): _description_
+            r_inhibitor (int): _description_
+            w (float): _description_
+        """
+        # 1st pass : calculate cells Disc and apply cells-set
+        print("1st pass start - calculate cells Disc and apply cells-set")
+        for u in range(self.height):
+            for v in range(self.width):
+                self.reset_visited()
+                activators = self.count_d_cells([u, v], r_activator)
 
-                # get pixel
-                cell_color = cells.get_color(x, y)
-                is_equal = (
-                    cell_color[0] == RGBA_COLOR_D.r
-                    and cell_color[1] == RGBA_COLOR_D.g
-                    and cell_color[2] == RGBA_COLOR_D.b
-                    and cell_color[3] == RGBA_COLOR_D.a
+                self.reset_visited()
+                inhibitors = (
+                    self.count_d_cells([u, v], r_inhibitor) - activators
                 )
-                if is_equal:
-                    cell_count += 1
 
-    return cell_count
+                # This computation happens to all cells at the same time,
+                # therefore we must defer the setting of the color to a 2nd step.
+                disc = activators - w * inhibitors
+                self.set_disc(v, u, disc)
+        # 2nd pass : apply cells to image:
+        print("2nd pass start - apply cells to image")
+        for u in range(self.height):
+            for v in range(self.width):
+                d = self.get_disc(u, v)
+                if d > 0:
+                    self.set_color(u, v, RGBA_COLOR_D)
+                elif d < 0:
+                    self.set_color(u, v, RGBA_COLOR_U)
+        print("finished")
+
+    def update_all_cells(self, radius: float) -> int:
+        """Counts the D cells at position pos in a given radius."""
+        cell_count = 0
+
+        # region_list = get_moore_neighborhood(cells, pos, radius)
+        for i in range(self.width):
+            for j in range(self.height):
+                # region_list = cell_neighbors(cells.data, i, j, distance=radius)
+                region_list = self.get_moore_neighborhood(
+                    self, (i, j), radius=radius
+                )
+
+                for region in region_list:
+                    # update coords:
+                    x = region[0]
+                    y = region[1]
+
+                    # get pixel
+                    cell_color = self.get_color(x, y)
+                    is_equal = (
+                        cell_color[0] == RGBA_COLOR_D.r
+                        and cell_color[1] == RGBA_COLOR_D.g
+                        and cell_color[2] == RGBA_COLOR_D.b
+                        and cell_color[3] == RGBA_COLOR_D.a
+                    )
+                    if is_equal:
+                        cell_count += 1
+
+        return cell_count
+
+    ############################################################################
+
+    def get_moore_neighborhood(
+        self,
+        pos: tuple[int, int],
+        radius: float,
+    ) -> np.ndarray:
+        """Gets the Moore neighborhood as a list of pixels around pos."""
+        moore_lookup = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+            [1, 1],
+            [-1, -1],
+            [1, -1],
+            [1, -1],
+        ]
+        result_n = []  # the neighboorhood result
+        queue = []  # create a queue for BFS
+        self.reset_visited()  # to memorize that the cell has been visited once
+
+        # Are coords inside the image; hence valid?
+        x, y = (pos[i] for i in (0, 1))
+        if not self.check_coords(x, y):
+            return result_n
+
+        # Mark the source_pixel as visited and enqueue it
+        coords = pos
+        result_n = [coords]
+        self.set_visited(x, y)
+        queue.append(coords)
+
+        while radius >= 0 and queue:
+            level_size = len(queue)
+
+            while level_size > 0:
+                level_size -= 1
+
+                # dequeue a pixel as src_pixel from queue
+                src_pixel = queue.pop(0)
+                result_n += [src_pixel]
+
+                if not queue:
+                    radius -= 1
+
+                # get all adjacent pixels of that dequeued src_pixel
+                # if a adjacent has not been visited, then mark it visited and
+                # enqueue it
+                for lookup in moore_lookup:
+                    new_x = src_pixel[0] + lookup[0]
+                    new_y = src_pixel[1] + lookup[1]
+
+                    # Are valid coords inside the image:
+                    if not self.check_coords(new_x, new_y):
+                        continue
+
+                    # cell got already visited
+                    if self.get_visited(new_x, new_y):
+                        continue
+
+                    coords = [new_x, new_y]
+                    queue.append(coords)
+                    self.set_visited(new_x, new_y)
+            radius -= 1
+        return result_n
+
+    def count_d_cells(self, pos: tuple[int, int], radius: float) -> int:
+        """Counts the D cells at position pos in a given radius."""
+        cell_count = 0
+
+        region_list = self.get_moore_neighborhood(pos, radius)
+
+        for region in region_list:
+            # update coords:
+            x = region[0]
+            y = region[1]
+
+            # get pixel
+            cell_color = self.get_color(x, y)
+            is_equal = (
+                cell_color[0] == RGBA_COLOR_D.r
+                and cell_color[1] == RGBA_COLOR_D.g
+                and cell_color[2] == RGBA_COLOR_D.b
+                and cell_color[3] == RGBA_COLOR_D.a
+            )
+            if is_equal:
+                cell_count += 1
+
+        return cell_count
 
 
 def sliding_window(arr, window_size):
@@ -203,137 +318,3 @@ def cell_neighbors(arr, i, j, distance):
 #     thickness = cv2.FILLED
 #     cv2.circle(mask, center_coordinates, radius, color, thickness)
 #     return np.argwhere(mask == (255, 255, 255))
-
-
-def get_moore_neighborhood(
-    cells: Cells,
-    pos: tuple[int, int],
-    radius: float,
-) -> np.ndarray:
-    """Gets the Moore neighborhood as a list of pixels around pos."""
-    moore_lookup = [
-        [1, 0],
-        [-1, 0],
-        [0, 1],
-        [0, -1],
-        [1, 1],
-        [-1, -1],
-        [1, -1],
-        [1, -1],
-    ]
-    result_n = []  # the neighboorhood result
-    queue = []  # create a queue for BFS
-    cells.reset_visited()  # to memorize that the cell has been visited once
-
-    # Are coords inside the image; hence valid?
-    x, y = (pos[i] for i in (0, 1))
-    if not cells.check_coords(x, y):
-        return result_n
-
-    # Mark the source_pixel as visited and enqueue it
-    coords = pos
-    result_n = [coords]
-    cells.set_visited(x, y)
-    queue.append(coords)
-
-    while radius >= 0 and queue:
-        level_size = len(queue)
-
-        while level_size > 0:
-            level_size -= 1
-
-            # dequeue a pixel as src_pixel from queue
-            src_pixel = queue.pop(0)
-            result_n += [src_pixel]
-
-            if not queue:
-                radius -= 1
-
-            # get all adjacent pixels of that dequeued src_pixel
-            # if a adjacent has not been visited, then mark it visited and
-            # enqueue it
-            for lookup in moore_lookup:
-                new_x = src_pixel[0] + lookup[0]
-                new_y = src_pixel[1] + lookup[1]
-
-                # Are valid coords inside the image:
-                if not cells.check_coords(new_x, new_y):
-                    continue
-
-                # cell got already visited
-                if cells.get_visited(new_x, new_y):
-                    continue
-
-                coords = [new_x, new_y]
-                queue.append(coords)
-                cells.set_visited(new_x, new_y)
-        radius -= 1
-    return result_n
-
-
-def count_d_cells(cells: Cells, pos: tuple[int, int], radius: float) -> int:
-    """Counts the D cells at position pos in a given radius."""
-    cell_count = 0
-
-    region_list = get_moore_neighborhood(cells, pos, radius)
-
-    for region in region_list:
-        # update coords:
-        x = region[0]
-        y = region[1]
-
-        # get pixel
-        cell_color = cells.get_color(x, y)
-        is_equal = (
-            cell_color[0] == RGBA_COLOR_D.r
-            and cell_color[1] == RGBA_COLOR_D.g
-            and cell_color[2] == RGBA_COLOR_D.b
-            and cell_color[3] == RGBA_COLOR_D.a
-        )
-        if is_equal:
-            cell_count += 1
-
-    return cell_count
-
-
-def cellular_automata(
-    cells: Cells, r_activator: int, r_inhibitor: int, w: float
-) -> None:
-    """Cellular Automata (CA) by David Young.
-
-    Args:
-        cells (Cells): _description_
-        r_activator (int): _description_
-        r_inhibitor (int): _description_
-        w (float): _description_
-    """
-    # we need to know the image dimensions
-    width = cells.width
-    height = cells.height
-
-    # 1st pass : calculate cells Disc and apply cells-set
-    print("1st pass start - calculate cells Disc and apply cells-set")
-    for u in range(height):
-        for v in range(width):
-            cells.reset_visited()
-            activators = count_d_cells(cells, [u, v], r_activator)
-
-            cells.reset_visited()
-            inhibitors = count_d_cells(cells, [u, v], r_inhibitor) - activators
-
-            # This computation happens to all cells at the same time,
-            # therefore we must defer the setting of the color to a 2nd step.
-            disc = activators - w * inhibitors
-            cells.set_disc(v, u, disc)
-    # 2nd pass : apply cells to image:
-    print("2nd pass start - apply cells to image")
-    for u in range(height):
-        for v in range(width):
-            d = cells.get_disc(u, v)
-            if d > 0:
-                # cells.set_cell(u, v, "D")
-                cells.set_color(u, v, RGBA_COLOR_D)
-            elif d < 0:
-                # cells.set_cell(u, v, "U")
-                cells.set_color(u, v, RGBA_COLOR_U)
-    print("finished")

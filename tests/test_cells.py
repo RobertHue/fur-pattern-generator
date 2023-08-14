@@ -1,21 +1,15 @@
 # from typing import Any
 # from typing import SupportsFloat
 
-import pytest
 import numpy as np
 
+import pytest
 from fpg.generator.cells import Cells
-from fpg.generator.cells import cell_neighbors
-from fpg.generator.cells import cellular_automata
-from fpg.generator.image import Image
+from fpg.generator.colors import NP_RGBA_DTYPE
 from fpg.generator.image import export_pil
 from fpg.generator.image import import_pil
-from fpg.generator.colors import RGB_Color
-
-from fpg.generator.colors import HSV_COLOR_D
-from fpg.generator.colors import HSV_COLOR_U
-from fpg.generator.colors import NP_RGBA_DTYPE
 from PIL import Image as im
+
 
 ####################
 #       INIT       #
@@ -52,14 +46,17 @@ array_2d = np.array(
 # )
 def test_set_color() -> None:
     # Define the values for the array and create a 2D numpy array
-    cells = Cells(res=(512, 512))
+    cells = Cells(res=(15, 15))
     # cells = Cells(ndarray=array_2d)
+
     cells.randomize_image()
     cells.update_disc()
-    cellular_automata(cells, 6, 3, 0.6)
+    print(cells)
+    export_pil(cells, "tests/intermediate/test_cells1.png")
+
+    cells.develop(cells, 6, 3, 0.6)
 
     # for debug:
-    image_name = "tests/intermediate/test_cells1.png"
-    export_pil(cells, image_name)
+    export_pil(cells, "tests/intermediate/test_cells3.png")
     # img2 = import_pil(image_name)
-    # assert False
+    assert False

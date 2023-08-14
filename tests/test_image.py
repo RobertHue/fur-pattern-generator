@@ -1,16 +1,15 @@
 # from typing import Any
 # from typing import SupportsFloat
 
-import pytest
 import numpy as np
 
+import pytest
+from fpg.generator.colors import NP_RGBA_DTYPE
+from fpg.generator.colors import RGB_Color
 from fpg.generator.image import Image
 from fpg.generator.image import export_pil
 from fpg.generator.image import import_pil
 
-
-from fpg.generator.colors import RGB_Color
-from fpg.generator.colors import NP_RGBA_DTYPE
 
 ####################
 #       INIT       #
@@ -118,30 +117,30 @@ def test_valid_coords(coords: list[int]) -> None:
 @pytest.mark.parametrize(
     ("x", "y", "expected"),
     (
-        (0, 0, (244, 222, 111, 255)),
-        (0, 1, (244, 222, 111, 255)),
-        (1, 2, (244, 222, 111, 255)),
-        (1, 3, (244, 222, 111, 255)),
-        (2, 3, (244, 222, 111, 255)),
+        (0, 0, RGB_Color(244, 222, 111, 255)),
+        (0, 1, RGB_Color(244, 222, 111, 255)),
+        (1, 2, RGB_Color(244, 222, 111, 255)),
+        (1, 3, RGB_Color(244, 222, 111, 255)),
+        (2, 3, RGB_Color(244, 222, 111, 255)),
     ),
 )
 def test_get_color(x: int, y: int, expected: RGB_Color) -> None:
     img = Image(ndarray=array_2d)
     rgba_col = img.get_color(x, y)
-    assert rgba_col[0] == expected[0]
-    assert rgba_col[1] == expected[1]
-    assert rgba_col[2] == expected[2]
-    assert rgba_col[3] == expected[3]
+    assert rgba_col[0] == expected.r
+    assert rgba_col[1] == expected.g
+    assert rgba_col[2] == expected.b
+    assert rgba_col[3] == expected.a
 
 
 @pytest.mark.parametrize(
     ("x", "y", "expected"),
     (
-        (0, 0, (244, 222, 111, 255)),
-        (0, 1, (244, 222, 111, 255)),
-        (1, 2, (244, 222, 111, 255)),
-        (1, 3, (244, 222, 111, 255)),
-        (2, 3, (244, 222, 111, 255)),
+        (0, 0, RGB_Color(244, 222, 111, 255)),
+        (0, 1, RGB_Color(244, 222, 111, 255)),
+        (1, 2, RGB_Color(244, 222, 111, 255)),
+        (1, 3, RGB_Color(244, 222, 111, 255)),
+        (2, 3, RGB_Color(244, 222, 111, 255)),
     ),
 )
 def test_set_color(x: int, y: int, expected: RGB_Color) -> None:
@@ -149,10 +148,10 @@ def test_set_color(x: int, y: int, expected: RGB_Color) -> None:
     img = Image(ndarray=array_2d)
     img.set_color(x, y, expected)
     rgba_col = img.get_color(x, y)
-    assert rgba_col[0] == expected[0]
-    assert rgba_col[1] == expected[1]
-    assert rgba_col[2] == expected[2]
-    assert rgba_col[3] == expected[3]
+    assert rgba_col[0] == expected.r
+    assert rgba_col[1] == expected.g
+    assert rgba_col[2] == expected.b
+    assert rgba_col[3] == expected.a
 
 
 def test_randomize() -> None:

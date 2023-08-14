@@ -1,8 +1,7 @@
 from colorsys import rgb_to_hsv
+from typing import NamedTuple
 
 import numpy as np
-
-from typing import NamedTuple
 
 
 # types
