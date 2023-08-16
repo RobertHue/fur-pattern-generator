@@ -5,9 +5,9 @@ import numpy as np
 
 import pytest
 from fpg.generator.cells import Cells
-from fpg.generator.colors import NP_RGBA_DTYPE
 from fpg.generator.colors import NP_RGBA_COLOR_D
 from fpg.generator.colors import NP_RGBA_COLOR_U
+from fpg.generator.colors import NP_RGBA_DTYPE
 from fpg.generator.colors import RGBA_COLOR_D
 from fpg.generator.colors import RGBA_COLOR_U
 from fpg.generator.image import export_pil

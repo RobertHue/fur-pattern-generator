@@ -48,7 +48,6 @@ class NeumannStrategy(NeighborStrategy):  # TODO - still needs to be tested
             for x in range(center_x - distance, center_x + distance + 1)
             for y in range(center_y - distance, center_y + distance + 1)
             if abs(center_x - x) + abs(center_y - y) <= distance
-            and abs(center_x - x) + abs(center_y - y) != 2 * distance
             and image.check_coords(x, y)
         ]
 
