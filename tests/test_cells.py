@@ -77,7 +77,11 @@ array_2d = np.array(  # 6 x 6
     ((array_2d, 15),),
 )
 def test_count_cells(ndarray: NP_RGBA_DTYPE, expected: int) -> None:
+    # print("ndarray: ", ndarray)
+    # print("ndarray.shape: ", ndarray.shape)
     cells = Cells(ndarray=ndarray)
+    # print("cells.data: ", cells.data)
+    # print("cells.data.shape: ", cells.data.shape)
     result = cells.count_d_cells((0, 0), 32)
     assert result == expected
 

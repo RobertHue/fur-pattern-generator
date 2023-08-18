@@ -48,6 +48,7 @@ T_RGBA = tuple[int, int, int, int]
 # Constants
 RGBA_COLOR_D = RGB_Color(r=0, g=0, b=0, a=255)  # BLACK
 RGBA_COLOR_U = RGB_Color(r=255, g=255, b=255, a=255)  # WHITE
+D_THRESHOLD = 0.5  # threshold of a D cell (value; HSV) that can be exceeded
 
 NP_RGBA_COLOR_D = np.array([(0, 0, 0, 255)], dtype=NP_RGBA_DTYPE)  # BLACK
 NP_RGBA_COLOR_U = np.array([(255, 255, 255, 255)], dtype=NP_RGBA_DTYPE)  # WHITE

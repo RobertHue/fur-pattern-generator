@@ -1,13 +1,12 @@
-import math
-
+import colorsys
 import numpy as np
 import numpy.typing as npt
-from numpy.lib.stride_tricks import as_strided
 
 from PIL import Image as im
 
 from .colors import RGBA_COLOR_D
 from .colors import RGBA_COLOR_U
+from .colors import D_THRESHOLD
 from .image import Image
 
 
@@ -127,7 +126,7 @@ class Cells(Image):
                 ID = self.count_d_cells(pos, RI) - AD  # ring
 
                 # This computation happens to all cells at the same time,
-                # therefore we must defer the setting of the color to a 2nd step.
+                # therefore we must defer the setting of the color to a 2nd step
                 disc = AD - (w * ID)
                 # print("activators: ", AD)
                 # print("inhibitors: ", ID)
@@ -143,12 +142,18 @@ class Cells(Image):
             # print("pos: ", type(pos))
             # print("pos: ", pos)
             cell_color = self.get_color(*pos)
-            is_equal = (
-                cell_color[0] == RGBA_COLOR_D.r
-                and cell_color[1] == RGBA_COLOR_D.g
-                and cell_color[2] == RGBA_COLOR_D.b
-                and cell_color[3] == RGBA_COLOR_D.a
+            # D cell if the HSVA-colors value threshold is exceeded
+            cell_color_adjusted = np.array(
+                [*cell_color],
+                dtype=np.float64,
             )
-            if is_equal:
+            cell_color_adjusted = np.divide(cell_color_adjusted, 255)
+            rgb = cell_color_adjusted[:3]
+            _, _, v = colorsys.rgb_to_hsv(*rgb)
+            # print("rgb: ", rgb)
+            # print("v: ", v)
+            if v <= D_THRESHOLD:
                 cell_count += 1
+                # print("cell_count: ", cell_count)
+            # print()
         return cell_count
