@@ -5,14 +5,10 @@ import numpy as np
 
 import pytest
 from fpg.generator.cells import Cells
-from fpg.generator.colors import NP_RGBA_COLOR_D
-from fpg.generator.colors import NP_RGBA_COLOR_U
 from fpg.generator.colors import NP_RGBA_DTYPE
 from fpg.generator.colors import RGBA_COLOR_D
 from fpg.generator.colors import RGBA_COLOR_U
 from fpg.generator.image import export_pil
-from fpg.generator.image import import_pil
-from PIL import Image as im
 
 
 ####################
@@ -100,19 +96,15 @@ def test_set_color() -> None:
     # Define the values for the array and create a 2D numpy array
     cells = Cells(res=(100, 100))
     # # cells = Cells(ndarray=array_2d)
-    # cells.randomize_image()
+    # cells.randomize()
 
     # img = import_pil("tests/intermediate/test_cells1.png")
     # cells = Cells(img.data)
-    cells.randomize_image()
+    cells.randomize()
 
     cells.print_discs()
-    cells.print_cells()
-
     cells.develop(3, 6, w=0.5)
-
     cells.print_discs()
-    cells.print_cells()
 
     # for debug:
     export_pil(cells, "tests/intermediate/test_cells2.png")

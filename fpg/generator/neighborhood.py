@@ -4,8 +4,8 @@ Returns:
     _type_: _description_
 """
 import math
-
-from abc import ABC, abstractmethod
+from abc import ABC
+from abc import abstractmethod
 
 import numpy as np
 
@@ -38,7 +38,7 @@ class MooreStrategy(NeighborStrategy):
         ]
 
 
-class NeumannStrategy(NeighborStrategy):  # TODO - still needs to be tested
+class NeumannStrategy(NeighborStrategy):
     def get_neighborhood(
         self, image: Image, center: list[int, int], distance: int
     ) -> np.ndarray:
@@ -52,7 +52,7 @@ class NeumannStrategy(NeighborStrategy):  # TODO - still needs to be tested
         ]
 
 
-class CircularStrategy(NeighborStrategy):  # TODO - still needs to be tested
+class CircularStrategy(NeighborStrategy):
     def get_neighborhood(
         self, image: Image, center: list[int, int], distance: int
     ) -> np.ndarray:

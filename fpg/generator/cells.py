@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 import numpy.typing as npt
 from numpy.lib.stride_tricks import as_strided
@@ -7,7 +9,7 @@ from PIL import Image as im
 from .colors import RGBA_COLOR_D
 from .colors import RGBA_COLOR_U
 from .image import Image
-import math
+
 
 NumpyType = npt.NDArray
 import fpg.generator.neighborhood as nh
@@ -57,7 +59,7 @@ class Cells(Image):
 
     ############################################################################
 
-    def print_cells(self) -> None:
+    def show_cells(self) -> None:
         pil = im.fromarray(self.data, mode="RGBA")
         pil.show()
 

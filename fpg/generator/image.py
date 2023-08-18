@@ -10,7 +10,7 @@ from PIL import Image as im
 from .colors import NP_RGBA_COLOR_D
 from .colors import NP_RGBA_COLOR_U
 from .colors import NP_RGBA_DTYPE
-
+from typing import Any
 
 NumpyType = npt.NDArray
 
@@ -42,10 +42,13 @@ class Image:
         if ndarray is None:
             self._img = np.zeros(shape=(*res,), dtype=NP_RGBA_DTYPE)
         else:
-            if ndarray is not NumpyType and ndarray.dtype != NP_RGBA_DTYPE:
+            if not isinstance(ndarray, np.ndarray):
                 raise ValueError(
-                    f"need of custom type NP_RGBA_DTYPE, but is {ndarray.ndim=}"
-                    f" with {ndarray.shape=} with {ndarray.dtype=}"
+                    f"need of custom type NumpyType, but is {type(ndarray)}"
+                )
+            if ndarray.dtype is not NP_RGBA_DTYPE:
+                raise ValueError(
+                    f"need of custom type NP_RGBA_DTYPE, but is {type(ndarray)}"
                 )
             if ndarray.ndim != 2:
                 raise ValueError(
@@ -120,7 +123,7 @@ class Image:
 
     ############################################################################
 
-    def randomize_image(self) -> None:
+    def randomize(self) -> None:
         """Randomizes the image with U & D pixels."""
         for y in range(self.height):
             for x in range(self.width):
@@ -152,4 +155,32 @@ def import_pil(name: str, mode: str = "RGBA") -> Image:
         # print("img mode: ", img.mode)
         # print("img format: ", img.format)
         np_img = np.rec.fromarrays(np_img.T, dtype=NP_RGBA_DTYPE).T
+        np_img = np.array(np_img, dtype=NP_RGBA_DTYPE)
     return Image(np_img)
+
+
+def flatlist_to_image(flatlist: list[float], height: int, width: int) -> Image:
+    # Convert the flat list to a NumPy array with proper dimensions
+    image_array = np.array(flatlist).reshape((height, width, 4))
+    # print("d: ", image_array)
+    # print("d type: ", type(image_array))
+    # print("d dtype: ", image_array.dtype)
+    image_array = np.multiply(image_array, 255).astype(np.uint8)
+    print("a: ", image_array)
+    # print("a type: ", type(image_array))
+    # print("a dtype: ", image_array.dtype)
+    image_array = image_array.view(NP_RGBA_DTYPE).squeeze()
+    print("image_array: ", image_array)
+    print("image_array type: ", type(image_array))
+    print("image_array dtype: ", image_array.dtype)
+    return image_array
+
+
+def image_to_flatlist(image: Image) -> list[float]:
+    # Numpy -> Blender Image Array:
+    flat_array = image.data.view(np.uint8).flatten().astype(np.float64)
+    flat_adjusted = np.divide(flat_array, 255)
+    flatlist = flat_adjusted.tolist()
+    print("flatlist: ", flatlist)
+    print("flatlist type: ", type(flatlist))
+    return flatlist
