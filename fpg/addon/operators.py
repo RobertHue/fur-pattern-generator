@@ -4,7 +4,9 @@ from .helpers import read_image
 from .helpers import write_image
 from .helpers import get_active_image
 
-print(
+from loguru import logger
+
+logger.info(
     "__file__={:<35} | __name__={:<20} | __package__={:<20}".format(
         __file__, __name__, str(__package__)
     )
@@ -30,19 +32,15 @@ class FPG_OT_cellular_automata(bpy.types.Operator):
     bl_options = {"REGISTER", "UNDO"}  # noqa: RUF012
 
     def execute(self, context):
-        # print("texture_data: ", image_array)
         image_array = read_image(context)
         cells = Cells(ndarray=image_array)
-        # cells.show_cells()
-
         material = bpy.data.materials[0]
         RA = material.my_settings.r_activator
         RI = material.my_settings.r_inhibitor
         w = material.my_settings.w
         cells.develop(RA, RI, w)
-        # cells.show_cells()
         write_image(context, cells)
-        print("FINISHED o/")
+        logger.info("FINISHED o/")
         return {"FINISHED"}
 
 
@@ -54,14 +52,12 @@ class FPG_OT_generate_random(bpy.types.Operator):
 
     def execute(self, context):
         active_image = get_active_image(context)
-        # Get the image's width and height
         width = active_image.size[0]
         height = active_image.size[1]
-
         cells = Cells(res=(width, height))
         cells.randomize()
         write_image(context, cells)
-        print("FINISHED o/")
+        logger.info("FINISHED o/")
         return {"FINISHED"}
 
 

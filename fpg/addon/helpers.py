@@ -2,6 +2,7 @@ import bpy
 
 from fpg.generator import flatlist_to_image
 from fpg.generator import image_to_flatlist
+from loguru import logger
 
 
 def get_active_image(context):
@@ -12,7 +13,7 @@ def get_active_image(context):
     active_image: bpy.types.Image = image_editor.spaces.active.image
     if active_image is None:
         raise RuntimeError("No active image in the Image Editor.")
-    print("Active image:", active_image.name)
+    logger.info("Active image:", active_image.name)
     return active_image
 
 

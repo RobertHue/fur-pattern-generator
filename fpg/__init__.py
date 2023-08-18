@@ -11,6 +11,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+from loguru import logger
+
 import site
 
 
@@ -21,7 +23,7 @@ site.addsitedir(
 import numpy as np
 
 
-print(f"version of numpy: {np.__version__}")  # just a little test
+logger.info(f"version of numpy: {np.__version__}")  # just a little test
 
 
 from . import addon
@@ -39,7 +41,7 @@ bl_info = {
     "category": "Generic",
 }
 
-print(
+logger.info(
     f"""
 	__file__={__file__:<35}
 	__name__={__name__:<20}

@@ -8,7 +8,8 @@ from .colors import RGBA_COLOR_D
 from .colors import RGBA_COLOR_U
 from .colors import D_THRESHOLD
 from .image import Image
-
+from loguru import logger
+from io import StringIO
 
 NumpyType = npt.NDArray
 import fpg.generator.neighborhood as nh
@@ -63,22 +64,24 @@ class Cells(Image):
         pil.show()
 
     def print_visits(self) -> None:
-        print("visited:\n", self._visited)
+        logger.info("visited:\n", self._visited)
 
     def print_discs(self) -> None:
-        print()
-        print("print discriminators: ")
+        result = StringIO()
+        result.write("\n")
+        result.write("print discriminators: ")
         for row in self._disc:
-            print("[", end="")
+            result.write("[")
             for d in row:
                 if d > 0:
-                    print(" +", end="")
+                    result.write(" +")
                 elif d < 0:
-                    print(" -", end="")
+                    result.write(" -")
                 else:
-                    print("  ", end="")
-            print("]")
-        print()
+                    result.write("  ")
+            result.write("]")
+        result.write("\n")
+        logger.info(result)
 
     ############################################################################
 
@@ -102,11 +105,11 @@ class Cells(Image):
             )
 
         # 1st pass : calculate cells Disc and apply cells-set
-        print("1st pass start - calculate cells Disc and apply cells-set")
+        logger.info("1st pass start - calculate cells Disc and apply cells-set")
         self.update_discs(RA, RI, w)
 
         # 2nd pass : apply cells to image:
-        print("2nd pass start - apply cells to image")
+        logger.info("2nd pass start - apply cells to image")
         for y in range(self.height):
             for x in range(self.width):
                 pos = (x, y)
@@ -116,7 +119,7 @@ class Cells(Image):
                 elif d < 0:
                     self.set_color(*pos, RGBA_COLOR_U)
 
-        print("finished")
+        logger.info("finished")
 
     def update_discs(self, RA: int, RI: int, w: float) -> int:
         for y in range(self.height):
@@ -128,9 +131,9 @@ class Cells(Image):
                 # This computation happens to all cells at the same time,
                 # therefore we must defer the setting of the color to a 2nd step
                 disc = AD - (w * ID)
-                # print("activators: ", AD)
-                # print("inhibitors: ", ID)
-                # print("disc: ", disc)
+                # logger.debug("activators: ", AD)
+                # logger.debug("inhibitors: ", ID)
+                # logger.debug("disc: ", disc)
                 self.set_disc(*pos, disc)
 
     def count_d_cells(self, pos: tuple[int, int], distance: int) -> int:
@@ -139,8 +142,6 @@ class Cells(Image):
         region = self._nstrategy.get_neighborhood(self, pos, distance)
 
         for pos in region:
-            # print("pos: ", type(pos))
-            # print("pos: ", pos)
             cell_color = self.get_color(*pos)
             # D cell if the HSVA-colors value threshold is exceeded
             cell_color_adjusted = np.array(
@@ -150,10 +151,6 @@ class Cells(Image):
             cell_color_adjusted = np.divide(cell_color_adjusted, 255)
             rgb = cell_color_adjusted[:3]
             _, _, v = colorsys.rgb_to_hsv(*rgb)
-            # print("rgb: ", rgb)
-            # print("v: ", v)
             if v <= D_THRESHOLD:
                 cell_count += 1
-                # print("cell_count: ", cell_count)
-            # print()
         return cell_count

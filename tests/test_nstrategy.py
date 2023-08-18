@@ -8,7 +8,7 @@ from fpg.generator.image import Image
 from fpg.generator.neighborhood import CircularStrategy
 from fpg.generator.neighborhood import MooreStrategy
 from fpg.generator.neighborhood import NeumannStrategy
-
+from loguru import logger
 
 # create a 2D numpy array with defined values
 array_2d = np.array(  # 6 x 6
@@ -123,10 +123,10 @@ def test_moore_neighborhood(
     img = Image(ndarray=ndarray)
     nstrategy = MooreStrategy()
     result = nstrategy.get_neighborhood(img, pos, distance)
-    print("pos: ", pos)
-    print("distance: ", distance)
-    print("result: ", result)
-    print("expected: ", expected)
+    logger.debug("pos: ", pos)
+    logger.debug("distance: ", distance)
+    logger.debug("result: ", result)
+    logger.debug("expected: ", expected)
     assert len(result) == len(expected)
     assert set(result) == set(expected)
 
@@ -171,10 +171,10 @@ def test_neumann_neighborhood(
     img = Image(ndarray=ndarray)
     nstrategy = NeumannStrategy()
     result = nstrategy.get_neighborhood(img, pos, distance)
-    print("pos: ", pos)
-    print("distance: ", distance)
-    print("result: ", result)
-    print("expected: ", expected)
+    logger.debug("pos: ", pos)
+    logger.debug("distance: ", distance)
+    logger.debug("result: ", result)
+    logger.debug("expected: ", expected)
     assert len(result) == len(expected)
     assert set(result) == set(expected)
 
@@ -219,9 +219,9 @@ def test_circular_neighborhood(
     img = Image(ndarray=ndarray)
     nstrategy = CircularStrategy()
     result = nstrategy.get_neighborhood(img, pos, distance)
-    print("pos: ", pos)
-    print("distance: ", distance)
-    print("result: ", result)
-    print("expected: ", expected)
+    logger.debug("pos: ", pos)
+    logger.debug("distance: ", distance)
+    logger.debug("result: ", result)
+    logger.debug("expected: ", expected)
     assert len(result) == len(expected)
     assert set(result) == set(expected)

@@ -5,8 +5,9 @@
 # This happens due to blender not calling this addon as a package
 # See: https://napuzba.com/a/import-error-relative-no-parent
 #
+from loguru import logger
 
-print(
+logger.info(
     f"""
 	__file__={__file__:<35}
 	__name__={__name__:<20}

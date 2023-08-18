@@ -10,6 +10,8 @@ from PIL import Image as im
 from .colors import NP_RGBA_COLOR_D
 from .colors import NP_RGBA_COLOR_U
 from .colors import NP_RGBA_DTYPE
+from loguru import logger
+from io import StringIO
 
 NumpyType = npt.NDArray
 
@@ -55,7 +57,7 @@ class Image:
                     f" with {ndarray.shape=} with {ndarray.dtype=}"
                 )
             self._img = ndarray
-        print(
+        logger.info(
             f"\nis {self._img.ndim=} with {self._img.shape=} with "
             f"{self._img.dtype=}"
         )
@@ -98,9 +100,9 @@ class Image:
 
     def __str__(self) -> str:
         """str for user output"""
-        result = ""
+        result = StringIO()
         for index, val in np.ndenumerate(self._img):
-            print(f"{index[0]}, {index[1]}, {val}")
+            result.write(f"{index[0]}, {index[1]}, {val}")
         return result
 
     def __repr__(self) -> str:
@@ -148,11 +150,6 @@ def import_pil(name: str, mode: str = "RGBA") -> Image:
     with im.open(name).convert(mode) as img:
         img.convert(mode=mode)
         np_img = np.array(img)
-        # print("np_img: ", np_img)
-        # print("np_img shape: ", np_img.shape)
-        # print("np_img size: ", np_img.size)
-        # print("img mode: ", img.mode)
-        # print("img format: ", img.format)
         np_img = np.rec.fromarrays(np_img.T, dtype=NP_RGBA_DTYPE).T
         np_img = np.array(np_img, dtype=NP_RGBA_DTYPE)
     return Image(np_img)
@@ -161,17 +158,12 @@ def import_pil(name: str, mode: str = "RGBA") -> Image:
 def flatlist_to_image(flatlist: list[float], height: int, width: int) -> Image:
     # Convert the flat list to a NumPy array with proper dimensions
     image_array = np.array(flatlist).reshape((height, width, 4))
-    # print("d: ", image_array)
-    # print("d type: ", type(image_array))
-    # print("d dtype: ", image_array.dtype)
     image_array = np.multiply(image_array, 255).astype(np.uint8)
-    print("a: ", image_array)
-    # print("a type: ", type(image_array))
-    # print("a dtype: ", image_array.dtype)
+    logger.info("a: ", image_array)
     image_array = image_array.view(NP_RGBA_DTYPE).squeeze()
-    print("image_array: ", image_array)
-    print("image_array type: ", type(image_array))
-    print("image_array dtype: ", image_array.dtype)
+    logger.debug("image_array: ", image_array)
+    logger.debug("image_array type: ", type(image_array))
+    logger.debug("image_array dtype: ", image_array.dtype)
     return image_array
 
 
@@ -180,6 +172,6 @@ def image_to_flatlist(image: Image) -> list[float]:
     flat_array = image.data.view(np.uint8).flatten().astype(np.float64)
     flat_adjusted = np.divide(flat_array, 255)
     flatlist = flat_adjusted.tolist()
-    print("flatlist: ", flatlist)
-    print("flatlist type: ", type(flatlist))
+    logger.debug("flatlist: ", flatlist)
+    logger.debug("flatlist type: ", type(flatlist))
     return flatlist

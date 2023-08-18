@@ -2,8 +2,9 @@ from . import operators
 from . import panels
 from . import properties
 
+from loguru import logger
 
-print(
+logger.info(
     f"""
 	__file__={__file__:<35}
 	__name__={__name__:<20}
