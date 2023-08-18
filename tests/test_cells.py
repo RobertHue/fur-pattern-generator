@@ -8,6 +8,7 @@ from fpg.generator.cells import Cells
 from fpg.generator.colors import NP_RGBA_DTYPE
 from fpg.generator.colors import RGBA_COLOR_D
 from fpg.generator.colors import RGBA_COLOR_U
+from fpg.generator.image import NumpyType
 from fpg.generator.image import export_pil
 from loguru import logger
 
@@ -77,7 +78,7 @@ array_2d = np.array(  # 6 x 6
     ("ndarray", "expected"),
     ((array_2d, 15),),
 )
-def test_count_cells(ndarray: NP_RGBA_DTYPE, expected: int) -> None:
+def test_count_cells(ndarray: NumpyType, expected: int) -> None:
     logger.debug("ndarray: ", ndarray)
     logger.debug("ndarray.shape: ", ndarray.shape)
     cells = Cells(ndarray=ndarray)

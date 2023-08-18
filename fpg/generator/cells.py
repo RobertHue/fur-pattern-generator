@@ -25,10 +25,10 @@ class Cells(Image):
     def __init__(
         self,
         nstrategy: nh.NeighborStrategy = nh.NeumannStrategy(),
-        *args: str,
-        **kwargs: int,
+        ndarray: NumpyType | None = None,
+        res: tuple[int, int] | None = None,
     ) -> None:
-        super().__init__(*args, **kwargs)
+        super().__init__(ndarray, res)
         self._disc = np.zeros(self._img.shape, dtype=np.float32)
         self._nstrategy = nstrategy
 
@@ -83,7 +83,7 @@ class Cells(Image):
                     result.write("  ")
             result.write("]")
         result.write("\n")
-        logger.info(result)
+        logger.info(result.read())
 
     ############################################################################
 
@@ -123,7 +123,7 @@ class Cells(Image):
 
         logger.info("finished")
 
-    def update_discs(self, RA: int, RI: int, w: float) -> int:
+    def update_discs(self, RA: int, RI: int, w: float) -> None:
         for y in range(self.height):
             for x in range(self.width):
                 pos = (x, y)

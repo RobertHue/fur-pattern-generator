@@ -5,9 +5,12 @@ from fpg.generator.colors import NP_RGBA_DTYPE
 from fpg.generator.colors import RGBA_COLOR_D
 from fpg.generator.colors import RGBA_COLOR_U
 from fpg.generator.image import Image
+from fpg.generator.image import NumpyType
+from fpg.generator.neighborhood import CenterType
 from fpg.generator.neighborhood import CircularStrategy
 from fpg.generator.neighborhood import MooreStrategy
 from fpg.generator.neighborhood import NeumannStrategy
+from fpg.generator.neighborhood import PosListType
 from loguru import logger
 
 
@@ -119,7 +122,10 @@ moore_3_2_r2 = [
     ),
 )
 def test_moore_neighborhood(
-    ndarray: NP_RGBA_DTYPE, pos: tuple[int, int], distance: int, expected: int
+    ndarray: NumpyType,
+    pos: CenterType,
+    distance: int,
+    expected: PosListType,
 ) -> None:
     img = Image(ndarray=ndarray)
     nstrategy = MooreStrategy()
@@ -167,7 +173,10 @@ neumann_3_2_r2 = [
     ),
 )
 def test_neumann_neighborhood(
-    ndarray: NP_RGBA_DTYPE, pos: tuple[int, int], distance: int, expected: int
+    ndarray: NumpyType,
+    pos: CenterType,
+    distance: int,
+    expected: PosListType,
 ) -> None:
     img = Image(ndarray=ndarray)
     nstrategy = NeumannStrategy()
@@ -215,7 +224,10 @@ neumann_3_2_r2 = [
     ),
 )
 def test_circular_neighborhood(
-    ndarray: NP_RGBA_DTYPE, pos: tuple[int, int], distance: int, expected: int
+    ndarray: NumpyType,
+    pos: CenterType,
+    distance: int,
+    expected: PosListType,
 ) -> None:
     img = Image(ndarray=ndarray)
     nstrategy = CircularStrategy()

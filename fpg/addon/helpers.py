@@ -1,6 +1,6 @@
 import bpy
-from fpg.generator import flatlist_to_image
-from fpg.generator import image_to_flatlist
+from fpg.generator import flatlist_to_numpy
+from fpg.generator import numpy_to_flatlist
 from loguru import logger
 
 
@@ -9,7 +9,7 @@ def get_active_image(context):
     image_editor = next(
         area for area in context.screen.areas if area.type == "IMAGE_EDITOR"
     )
-    active_image: bpy.types.Image = image_editor.spaces.active.image
+    active_image = image_editor.spaces.active.image
     if active_image is None:
         raise RuntimeError("No active image in the Image Editor.")
     logger.info("Active image:", active_image.name)
@@ -17,6 +17,7 @@ def get_active_image(context):
 
 
 def read_image(context):
+    """Reads an image into an numpy array"""
     active_image = get_active_image(context)
 
     # Make sure the image is packed or loaded
@@ -29,10 +30,11 @@ def read_image(context):
     # Get the image's pixels as a flat list of (r, g, b, a) values
     pixels = active_image.pixels
 
-    return flatlist_to_image(pixels, height, width)
+    return flatlist_to_numpy(pixels, height, width)
 
 
 def write_image(context, image):
+    """Writes an nu an image into an numpy array"""
     active_image = get_active_image(context)
 
     # Make sure the image is packed or loaded
@@ -40,7 +42,7 @@ def write_image(context, image):
 
     # Write
     pixels = active_image.pixels
-    flatlist = image_to_flatlist(image)
+    flatlist = numpy_to_flatlist(image.data)
     pixels[:] = flatlist
 
     # Update the image data

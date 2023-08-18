@@ -7,16 +7,18 @@ import math
 from abc import ABC
 from abc import abstractmethod
 
-import numpy as np
-
 from fpg.generator.image import Image
+
+
+PosListType = list[tuple[int, int]]
+CenterType = tuple[int, int]
 
 
 class NeighborStrategy(ABC):
     @abstractmethod
     def get_neighborhood(
-        self, image: Image, center: list[int, int], distance: int
-    ) -> np.ndarray:
+        self, image: Image, center: CenterType, distance: int
+    ) -> PosListType:
         """Gets the Moore neighborhood as a list of pixels around pos.
 
         Note:
@@ -27,8 +29,8 @@ class NeighborStrategy(ABC):
 
 class MooreStrategy(NeighborStrategy):
     def get_neighborhood(
-        self, image: Image, center: list[int, int], distance: int
-    ) -> np.ndarray:
+        self, image: Image, center: CenterType, distance: int
+    ) -> PosListType:
         center_x, center_y = center
         return [
             (x, y)
@@ -40,8 +42,8 @@ class MooreStrategy(NeighborStrategy):
 
 class NeumannStrategy(NeighborStrategy):
     def get_neighborhood(
-        self, image: Image, center: list[int, int], distance: int
-    ) -> np.ndarray:
+        self, image: Image, center: CenterType, distance: int
+    ) -> PosListType:
         center_x, center_y = center
         return [
             (x, y)
@@ -54,8 +56,8 @@ class NeumannStrategy(NeighborStrategy):
 
 class CircularStrategy(NeighborStrategy):
     def get_neighborhood(
-        self, image: Image, center: list[int, int], distance: int
-    ) -> np.ndarray:
+        self, image: Image, center: CenterType, distance: int
+    ) -> PosListType:
         center_x, center_y = center
         return [
             (x, y)

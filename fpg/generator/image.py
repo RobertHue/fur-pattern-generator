@@ -9,9 +9,10 @@ import numpy.typing as npt
 from loguru import logger
 from PIL import Image as im
 
-from .colors import NP_RGBA_COLOR_D
-from .colors import NP_RGBA_COLOR_U
 from .colors import NP_RGBA_DTYPE
+from .colors import RGBA_COLOR_D
+from .colors import RGBA_COLOR_U
+from .colors import RGB_Color
 
 
 NumpyType = npt.NDArray
@@ -76,7 +77,7 @@ class Image:
         return self._img.shape[1]
 
     @property
-    def shape(self) -> tuple[int, int]:
+    def shape(self) -> tuple[int, ...]:
         return self._img.shape
 
     ############################################################################
@@ -104,7 +105,7 @@ class Image:
         result = StringIO()
         for index, val in np.ndenumerate(self._img):
             result.write(f"{index[0]}, {index[1]}, {val}")
-        return result
+        return result.read()
 
     def __repr__(self) -> str:
         """Repr for Debug (Fallback for str)"""
@@ -115,11 +116,11 @@ class Image:
 
     ############################################################################
 
-    def get_color(self, x: int, y: int) -> NP_RGBA_DTYPE:
+    def get_color(self, x: int, y: int) -> RGB_Color:
         """Gets the pixel's color at 'x' 'y' as RGBA."""
         return self._img[y, x]
 
-    def set_color(self, x: int, y: int, rgba: NP_RGBA_DTYPE) -> None:
+    def set_color(self, x: int, y: int, rgba: RGB_Color) -> None:
         """Sets the pixel's color at 'x' 'y' with RGBA."""
         self._img[y, x] = rgba
 
@@ -131,9 +132,9 @@ class Image:
             for x in range(self.width):
                 random_bool = random.choice([True, False])
                 if random_bool is True:
-                    self.set_color(x, y, NP_RGBA_COLOR_D)
+                    self.set_color(x, y, RGBA_COLOR_D)
                 else:
-                    self.set_color(x, y, NP_RGBA_COLOR_U)
+                    self.set_color(x, y, RGBA_COLOR_U)
 
 
 ################################################################################
@@ -156,7 +157,9 @@ def import_pil(name: str, mode: str = "RGBA") -> Image:
     return Image(np_img)
 
 
-def flatlist_to_image(flatlist: list[float], height: int, width: int) -> Image:
+def flatlist_to_numpy(
+    flatlist: list[float], height: int, width: int
+) -> NumpyType:
     # Convert the flat list to a NumPy array with proper dimensions
     image_array = np.array(flatlist).reshape((height, width, 4))
     image_array = np.multiply(image_array, 255).astype(np.uint8)
@@ -168,9 +171,9 @@ def flatlist_to_image(flatlist: list[float], height: int, width: int) -> Image:
     return image_array
 
 
-def image_to_flatlist(image: Image) -> list[float]:
+def numpy_to_flatlist(numpy_arr: NumpyType) -> list[float]:
     # Numpy -> Blender Image Array:
-    flat_array = image.data.view(np.uint8).flatten().astype(np.float64)
+    flat_array = numpy_arr.view(np.uint8).flatten().astype(np.float64)
     flat_adjusted = np.divide(flat_array, 255)
     flatlist = flat_adjusted.tolist()
     logger.debug("flatlist: ", flatlist)
