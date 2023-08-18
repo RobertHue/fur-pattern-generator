@@ -1,15 +1,17 @@
 import colorsys
+from io import StringIO
+
 import numpy as np
 import numpy.typing as npt
 
+from loguru import logger
 from PIL import Image as im
 
+from .colors import D_THRESHOLD
 from .colors import RGBA_COLOR_D
 from .colors import RGBA_COLOR_U
-from .colors import D_THRESHOLD
 from .image import Image
-from loguru import logger
-from io import StringIO
+
 
 NumpyType = npt.NDArray
 import fpg.generator.neighborhood as nh

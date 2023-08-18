@@ -1,5 +1,4 @@
 import bpy
-
 from fpg.generator import flatlist_to_image
 from fpg.generator import image_to_flatlist
 from loguru import logger

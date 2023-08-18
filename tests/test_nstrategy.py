@@ -10,6 +10,7 @@ from fpg.generator.neighborhood import MooreStrategy
 from fpg.generator.neighborhood import NeumannStrategy
 from loguru import logger
 
+
 # create a 2D numpy array with defined values
 array_2d = np.array(  # 6 x 6
     [

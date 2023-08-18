@@ -9,8 +9,8 @@ from fpg.generator.colors import NP_RGBA_DTYPE
 from fpg.generator.colors import RGBA_COLOR_D
 from fpg.generator.colors import RGBA_COLOR_U
 from fpg.generator.image import export_pil
-
 from loguru import logger
+
 
 ####################
 #       INIT       #
@@ -78,11 +78,11 @@ array_2d = np.array(  # 6 x 6
     ((array_2d, 15),),
 )
 def test_count_cells(ndarray: NP_RGBA_DTYPE, expected: int) -> None:
-    # logger.debug("ndarray: ", ndarray)
-    # logger.debug("ndarray.shape: ", ndarray.shape)
+    logger.debug("ndarray: ", ndarray)
+    logger.debug("ndarray.shape: ", ndarray.shape)
     cells = Cells(ndarray=ndarray)
-    # logger.debug("cells.data: ", cells.data)
-    # logger.debug("cells.data.shape: ", cells.data.shape)
+    logger.debug("cells.data: ", cells.data)
+    logger.debug("cells.data.shape: ", cells.data.shape)
     result = cells.count_d_cells((0, 0), 32)
     assert result == expected
 

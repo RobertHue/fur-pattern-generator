@@ -1,17 +1,18 @@
 # Python Module Index
 import random
+from io import StringIO
 
 # 3rd party
 import numpy as np
 import numpy.typing as npt
 
+from loguru import logger
 from PIL import Image as im
 
 from .colors import NP_RGBA_COLOR_D
 from .colors import NP_RGBA_COLOR_U
 from .colors import NP_RGBA_DTYPE
-from loguru import logger
-from io import StringIO
+
 
 NumpyType = npt.NDArray
 

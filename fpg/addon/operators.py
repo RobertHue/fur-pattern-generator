@@ -1,10 +1,11 @@
 import bpy
 from fpg.generator import Cells
+from loguru import logger
+
+from .helpers import get_active_image
 from .helpers import read_image
 from .helpers import write_image
-from .helpers import get_active_image
 
-from loguru import logger
 
 logger.info(
     "__file__={:<35} | __name__={:<20} | __package__={:<20}".format(

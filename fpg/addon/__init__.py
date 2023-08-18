@@ -1,8 +1,9 @@
+from loguru import logger
+
 from . import operators
 from . import panels
 from . import properties
 
-from loguru import logger
 
 logger.info(
     f"""
