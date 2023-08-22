@@ -1,4 +1,4 @@
-# fur_pattern_generator
+# Fur Pattern Generator (FPG)
 
 ![Python](https://img.shields.io/badge/python-3.10+-blue)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
