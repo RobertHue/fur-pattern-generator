@@ -4,6 +4,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build](https://github.com/RobertHue/fur_pattern_generator/actions/workflows/ci-test.yml/badge.svg?branch=master)](https://github.com/RobertHue/fur_pattern_generator/actions/workflows/ci-test.yml)
 
+![example](docs/example.png)
+
 With this blender add-on you can generate textures in the shape of the stripes
 and dots on animals, such as leopards and tigers.
 
@@ -15,9 +17,13 @@ neighborhood cells:
 - https://users.math.yale.edu/public_html/People/frame/Fractals/Panorama/Biology/Leopard/Leopard.html
 - http://ccl.northwestern.edu/netlogo/models/Fur
 
+Note: This module can also be used as a qt application:
+
+![example](docs/qt-interface.png)
+
 ## Table of Contents
 
-- [fur\_pattern\_generator](#fur_pattern_generator)
+- [fur pattern generator](#fur-pattern-generator)
   - [Table of Contents](#table-of-contents)
   - [Repository structure](#repository-structure)
   - [Getting Started](#getting-started)

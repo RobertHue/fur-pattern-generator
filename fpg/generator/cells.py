@@ -1,4 +1,5 @@
 import colorsys
+import random
 from io import StringIO
 
 import numpy as np
@@ -13,7 +14,6 @@ from .colors import RGBA_COLOR_U
 from .colors import RGB_Color
 from .image import Image
 
-import random
 
 NumpyType = npt.NDArray
 import fpg.generator.neighborhood as nh
