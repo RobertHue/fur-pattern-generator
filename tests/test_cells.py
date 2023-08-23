@@ -116,3 +116,18 @@ def test_set_color() -> None:
     export_pil(cells, "tests/intermediate/test_cells2.png")
     # img2 = import_pil(image_name)
     # assert False
+
+
+def test_randomize() -> None:
+    # Define the values for the array and create a 2D numpy array
+    img = Cells(ndarray=array_2d)
+
+    img.randomize()
+    for y in range(img.height):
+        for x in range(img.width):
+            origin_item = array_2d[y][x]
+            rand_item = img.get_color(x, y)
+            assert origin_item[0] == rand_item[0]
+            assert origin_item[1] == rand_item[1]
+            assert origin_item[2] == rand_item[2]
+            assert origin_item[3] == rand_item[3]

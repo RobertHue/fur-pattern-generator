@@ -10,8 +10,10 @@ from PIL import Image as im
 from .colors import D_THRESHOLD
 from .colors import RGBA_COLOR_D
 from .colors import RGBA_COLOR_U
+from .colors import RGB_Color
 from .image import Image
 
+import random
 
 NumpyType = npt.NDArray
 import fpg.generator.neighborhood as nh
@@ -25,12 +27,24 @@ class Cells(Image):
     def __init__(
         self,
         nstrategy: nh.NeighborStrategy = nh.NeumannStrategy(),
+        d_color: RGB_Color = RGBA_COLOR_D,
+        u_color: RGB_Color = RGBA_COLOR_U,
         ndarray: NumpyType | None = None,
         res: tuple[int, int] | None = None,
     ) -> None:
         super().__init__(ndarray, res)
         self._disc = np.zeros(self._img.shape, dtype=np.float32)
         self._nstrategy = nstrategy
+        self._d_color = d_color
+        self._u_color = u_color
+
+    @property
+    def d_color(self) -> RGB_Color:
+        return self._d_color
+
+    @property
+    def u_color(self) -> RGB_Color:
+        return self._u_color
 
     @property
     def discs(self) -> NumpyType:
@@ -117,9 +131,9 @@ class Cells(Image):
                 pos = (x, y)
                 d = self.get_disc(*pos)
                 if d > 0:
-                    self.set_color(*pos, RGBA_COLOR_D)
+                    self.set_color(*pos, self.d_color)
                 elif d < 0:
-                    self.set_color(*pos, RGBA_COLOR_U)
+                    self.set_color(*pos, self.u_color)
 
         logger.info("finished")
 
@@ -156,3 +170,13 @@ class Cells(Image):
             if v <= D_THRESHOLD:
                 cell_count += 1
         return cell_count
+
+    def randomize(self) -> None:
+        """Randomizes the image with U & D pixels."""
+        for y in range(self.height):
+            for x in range(self.width):
+                random_bool = random.choice([True, False])
+                if random_bool is True:
+                    self.set_color(x, y, self.d_color)
+                else:
+                    self.set_color(x, y, self.u_color)

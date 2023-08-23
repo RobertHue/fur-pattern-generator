@@ -154,26 +154,10 @@ def test_set_color(x: int, y: int, expected: RGB_Color) -> None:
     assert rgba_col[3] == expected.a
 
 
-def test_randomize() -> None:
-    # Define the values for the array and create a 2D numpy array
-    img = Image(ndarray=array_2d)
-
-    img.randomize()
-    for y in range(img.height):
-        for x in range(img.width):
-            origin_item = array_2d[y][x]
-            rand_item = img.get_color(x, y)
-            assert origin_item[0] == rand_item[0]
-            assert origin_item[1] == rand_item[1]
-            assert origin_item[2] == rand_item[2]
-            assert origin_item[3] == rand_item[3]
-
-
 def test_import_export_pil1() -> None:
     # Define the values for the array and create a 2D numpy array
     image_name = "tests/intermediate/test_image1.png"
     img1 = Image(res=(512, 512))
-    img1.randomize()
 
     export_pil(img1, image_name)
     img2 = import_pil(image_name)
@@ -189,7 +173,6 @@ def test_import_export_pil1() -> None:
 def test_import_export_pil2() -> None:
     image_name = "tests/intermediate/test_image2.png"
     img1 = Image(ndarray=array_2d)
-    img1.randomize()
 
     export_pil(img1, image_name)
     img2 = import_pil(image_name)

@@ -1,5 +1,4 @@
 # Python Module Index
-import random
 from io import StringIO
 
 # 3rd party
@@ -10,8 +9,6 @@ from loguru import logger
 from PIL import Image as im
 
 from .colors import NP_RGBA_DTYPE
-from .colors import RGBA_COLOR_D
-from .colors import RGBA_COLOR_U
 from .colors import RGB_Color
 
 
@@ -123,18 +120,6 @@ class Image:
     def set_color(self, x: int, y: int, rgba: RGB_Color) -> None:
         """Sets the pixel's color at 'x' 'y' with RGBA."""
         self._img[y, x] = rgba
-
-    ############################################################################
-
-    def randomize(self) -> None:
-        """Randomizes the image with U & D pixels."""
-        for y in range(self.height):
-            for x in range(self.width):
-                random_bool = random.choice([True, False])
-                if random_bool is True:
-                    self.set_color(x, y, RGBA_COLOR_D)
-                else:
-                    self.set_color(x, y, RGBA_COLOR_U)
 
 
 ################################################################################
