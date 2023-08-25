@@ -5,7 +5,6 @@ import numpy as np
 from fpg.generator import NP_RGBA_DTYPE
 from fpg.generator import Cells
 from fpg.generator import RGB_Color
-from fpg.gui.window import Ui_FurPatternGenerator
 from loguru import logger
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QColor
@@ -20,8 +19,7 @@ from PySide6.QtWidgets import QGraphicsRectItem
 from PySide6.QtWidgets import QGraphicsScene
 from PySide6.QtWidgets import QMainWindow
 
-
-# TODO - use MVC model
+from window import Ui_FurPatternGenerator
 
 
 def pixmap_to_numpy(pixmap: QPixmap) -> np.ndarray:
