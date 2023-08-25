@@ -42,12 +42,14 @@ class FPG_OT_cellular_automata(bpy.types.Operator):
         logger.debug(f"color: {u=}")
         color_D = RGB_Color(*d)
         color_U = RGB_Color(*u)
-        RA = material.my_settings.r_activator
-        RI = material.my_settings.r_inhibitor
 
-        # develop next generation
+        # create image from context "texture paint" view
         image_array = read_image(context)
         cells = Cells(d_color=color_D, u_color=color_U, ndarray=image_array)
+
+        # develop next generation
+        RA = material.my_settings.r_activator
+        RI = material.my_settings.r_inhibitor
         w = material.my_settings.w
         cells.develop(RA, RI, w)
         write_image(context, cells)
@@ -71,7 +73,7 @@ class FPG_OT_generate_random(bpy.types.Operator):
         color_D = RGB_Color(*d)
         color_U = RGB_Color(*u)
 
-        # randomize
+        # randomize new image with given resolution
         active_image = get_active_image(context)
         width = active_image.size[0]
         height = active_image.size[1]
