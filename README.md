@@ -8,13 +8,13 @@ With this Blender add-on, you can generate textures in the form of stripes and s
 
 It can be used in one of the following three ways:
 
-- Used in a QT application:
+- Used in a QT application (`fpg-gui/`):
 ![example](docs/qt-interface.png)
 
-- Used as Blender Addon:
+- Used as Blender Addon (`fpg-bpy-addon/`):
 ![example](docs/example.png)
 
-- by using it as a library for your own application
+- by using it as a library for your own application (`fpg/`)
 
 ---
 
@@ -43,7 +43,9 @@ The repository is structured as follows:
 
 - `.github/`: contains the automated testing & linting by using [GitHub Actions]
 - `.vscode/`: workspace configuration for [VSCode]
-- `fpg/`: Python package containing the modules of the fur-pattern-generator
+- `fpg/`: Python package containing the modules of the fur-pattern-generator (FPG)
+- `fpg-bpy-addon/`: Python package containing the blender addon
+- `fpg-gui/`: Python package containing the QT-based GUI
 - `tests/`: contains unit tests for this project
 - `pyproject.toml`: configuration file for [Poetry], [isort], [Black], [mypy], [Ruff] and [pyright]
 - `README.md`: the README file that you are reading right now
