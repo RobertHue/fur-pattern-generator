@@ -1,5 +1,6 @@
 import bpy
 from fpg.generator import Cells
+from fpg.generator import RGB_Color
 from loguru import logger
 
 from .helpers import get_active_image
@@ -33,11 +34,20 @@ class FPG_OT_cellular_automata(bpy.types.Operator):
     bl_options = {"REGISTER", "UNDO"}  # noqa: RUF012
 
     def execute(self, context):
-        image_array = read_image(context)
-        cells = Cells(ndarray=image_array)
+        # retrieve the material settings
         material = bpy.data.materials[0]
+        d = tuple([int(x * 255) for x in material.my_settings.color_D[:]])
+        u = tuple([int(x * 255) for x in material.my_settings.color_U[:]])
+        logger.debug(f"color: {d=}")
+        logger.debug(f"color: {u=}")
+        color_D = RGB_Color(*d)
+        color_U = RGB_Color(*u)
         RA = material.my_settings.r_activator
         RI = material.my_settings.r_inhibitor
+
+        # develop next generation
+        image_array = read_image(context)
+        cells = Cells(d_color=color_D, u_color=color_U, ndarray=image_array)
         w = material.my_settings.w
         cells.develop(RA, RI, w)
         write_image(context, cells)
@@ -52,10 +62,21 @@ class FPG_OT_generate_random(bpy.types.Operator):
     bl_label = "Random Noise"
 
     def execute(self, context):
+        # retrieve the material settings
+        material = bpy.data.materials[0]
+        d = tuple([int(x * 255) for x in material.my_settings.color_D[:]])
+        u = tuple([int(x * 255) for x in material.my_settings.color_U[:]])
+        logger.debug(f"color: {d=}")
+        logger.debug(f"color: {u=}")
+        color_D = RGB_Color(*d)
+        color_U = RGB_Color(*u)
+
+        # randomize
         active_image = get_active_image(context)
         width = active_image.size[0]
         height = active_image.size[1]
         cells = Cells(res=(width, height))
+        cells = Cells(d_color=color_D, u_color=color_U, res=(width, height))
         cells.randomize()
         write_image(context, cells)
         logger.info("FINISHED o/")

@@ -9,7 +9,7 @@ class PropertySettings(bpy.types.PropertyGroup):
         name="Radius Of Inhibitor", default=6, min=0, max=10
     )
     w: bpy.props.FloatProperty(  # type: ignore
-        name="Inhibitor Weight w", default=0.69, min=0.0, max=1.0
+        name="Inhibitor Weight w", default=0.42, min=0.0, max=1.0
     )
     color_D: bpy.props.FloatVectorProperty(  # type: ignore
         name="color_D",
