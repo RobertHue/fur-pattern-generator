@@ -1,9 +1,38 @@
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTIBILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+import site
+
 from loguru import logger
 
-from . import operators
-from . import panels
-from . import properties
 
+site.addsitedir(
+    ".venv/lib/python3.10/site-packages"
+)  # adds the packages of the virtual environment (here: poetry)
+
+from . import addon
+
+
+bl_info = {
+    "name": "fur_pattern_generator",
+    "author": "RobertHue",
+    "description": "",
+    "blender": (2, 80, 0),
+    "version": (0, 2, 0),
+    "location": "",
+    "warning": "",
+    "category": "Generic",
+}
 
 logger.info(
     f"""
@@ -15,12 +44,8 @@ logger.info(
 
 
 def register():
-    operators.register()
-    panels.register()
-    properties.register()
+    addon.register()
 
 
 def unregister():
-    operators.unregister()
-    panels.unregister()
-    properties.unregister()
+    addon.unregister()
