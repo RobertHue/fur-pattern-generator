@@ -18,7 +18,6 @@ from PySide6.QtWidgets import QFileDialog
 from PySide6.QtWidgets import QGraphicsRectItem
 from PySide6.QtWidgets import QGraphicsScene
 from PySide6.QtWidgets import QMainWindow
-
 from window import Ui_FurPatternGenerator
 
 
