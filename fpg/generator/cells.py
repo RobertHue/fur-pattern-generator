@@ -1,5 +1,6 @@
 import colorsys
 import random
+import time
 from io import StringIO
 
 import numpy as np
@@ -122,10 +123,15 @@ class Cells(Image):
 
         # 1st pass : calculate cells Disc and apply cells-set
         logger.info("1st pass start - calculate cells Disc and apply cells-set")
+        start_time = time.perf_counter()
         self.update_discs(RA, RI, w)
+        end_time = time.perf_counter()
+        elapsed_time = end_time - start_time
+        logger.info(f"update_discs - Elapsed time: {elapsed_time:.6f} seconds")
 
         # 2nd pass : apply cells to image:
         logger.info("2nd pass start - apply cells to image")
+        start_time = time.perf_counter()
         for y in range(self.height):
             for x in range(self.width):
                 pos = (x, y)
@@ -134,6 +140,9 @@ class Cells(Image):
                     self.set_color(*pos, self.d_color)
                 elif d < 0:
                     self.set_color(*pos, self.u_color)
+        end_time = time.perf_counter()
+        elapsed_time = end_time - start_time
+        logger.info(f"apply cells - Elapsed time: {elapsed_time:.6f} seconds")
 
         logger.info("finished")
 
