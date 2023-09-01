@@ -17,4 +17,4 @@ if __name__ == "__main__":
     profiler_output_file = "cells_develop.cprofile"
     profiler_file_path = os.path.join(script_directory, profiler_output_file)
     cProfile.run("main()", filename=profiler_file_path)
-    subprocess.run(["snakeviz", profiler_file_path])
+    subprocess.Popen(["snakeviz", profiler_file_path])
